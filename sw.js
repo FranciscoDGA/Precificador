@@ -1,45 +1,55 @@
 /**
- * Precificador Pro - Service Worker
- * Garante funcionamento 100% Offline no celular e desktop
+ * Precificador Pro - Service Worker v3.0
+ * Garante funcionamento Offline com suporte a Clean URLs da Vercel e navegação fluida
  */
 
-const CACHE_NAME = 'precificador-pro-v2.2';
-const ASSETS_TO_CACHE = [
-  './',
-  './index.html',
-  './app.html',
-  './precificador-mercadolivre.html',
-  './precificador-amazon.html',
-  './precificador-shopee.html',
-  './precificador-shein.html',
-  './politica-de-privacidade.html',
-  './termos-de-uso.html',
-  './sobre.html',
-  './contato.html',
-  './manifest.json',
-  './assets/css/main.css',
-  './assets/css/landing.css',
-  './assets/css/app.css',
-  './assets/js/landing.js',
-  './assets/js/app.js',
-  './assets/icons/icon-192.png',
-  './assets/icons/icon-512.png',
-  'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap'
+const CACHE_NAME = 'precificador-pro-v3.0';
+
+const STATIC_ASSETS = [
+  '/',
+  '/index.html',
+  '/app',
+  '/app.html',
+  '/precificador-mercadolivre',
+  '/precificador-mercadolivre.html',
+  '/precificador-amazon',
+  '/precificador-amazon.html',
+  '/precificador-shopee',
+  '/precificador-shopee.html',
+  '/precificador-shein',
+  '/precificador-shein.html',
+  '/politica-de-privacidade',
+  '/politica-de-privacidade.html',
+  '/termos-de-uso',
+  '/termos-de-uso.html',
+  '/sobre',
+  '/sobre.html',
+  '/contato',
+  '/contato.html',
+  '/manifest.json',
+  '/assets/css/main.css',
+  '/assets/css/landing.css',
+  '/assets/css/app.css',
+  '/assets/js/landing.js',
+  '/assets/js/app.js',
+  '/assets/icons/icon-192.png',
+  '/assets/icons/icon-512.png',
+  '/assets/icons/icon.svg'
 ];
 
-// Instalação: Baixa os assets para o cache local
+// Instalação: Cacheia os recursos essenciais
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS_TO_CACHE).catch((err) => {
-        console.warn('Algum asset opcional falhou no cache:', err);
-      });
+      return Promise.allSettled(
+        STATIC_ASSETS.map((url) => cache.add(url).catch(() => {}))
+      );
     })
   );
   self.skipWaiting();
 });
 
-// Ativação: Limpa caches antigos
+// Ativação: Limpa caches legados imediatamente
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
@@ -55,42 +65,56 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Interceptação: Cache-First com fallback de rede
+// Interceptação inteligente
 self.addEventListener('fetch', (event) => {
-  // Ignora requisições não-GET
   if (event.request.method !== 'GET') return;
 
+  const url = new URL(event.request.url);
+
+  // 1. Navegação de Páginas (HTML / Clicar em links / Voltar no histórico)
+  // Estratégia: Network-First (NUNCA bloqueia redirects da Vercel e evita tela branca)
+  if (event.request.mode === 'navigate' || event.request.headers.get('accept')?.includes('text/html')) {
+    event.respondWith(
+      fetch(event.request)
+        .then((networkResponse) => {
+          // Se obteve resposta com sucesso, atualiza o cache
+          if (networkResponse && networkResponse.status === 200) {
+            const copy = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+          }
+          return networkResponse;
+        })
+        .catch(async () => {
+          // Se estiver OFFLINE, busca no cache por variações da URL
+          const cache = await caches.open(CACHE_NAME);
+          const cached = (await cache.match(event.request)) ||
+                         (await cache.match(url.pathname)) ||
+                         (await cache.match(url.pathname + '.html')) ||
+                         (await cache.match('/app.html')) ||
+                         (await cache.match('/index.html'));
+          if (cached) return cached;
+
+          return new Response('<html><body style="background:#0b0f19;color:#fff;font-family:sans-serif;text-align:center;padding:50px;"><h2>Modo Offline</h2><p>Conecte-se à internet para carregar esta página pela primeira vez.</p><a href="/" style="color:#3b82f6;">Voltar ao Início</a></body></html>', {
+            status: 200,
+            headers: { 'Content-Type': 'text/html; charset=utf-8' }
+          });
+        })
+    );
+    return;
+  }
+
+  // 2. Assets Estáticos (CSS, JS, Imagens, Fontes): Cache-First com atualização em background
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
-        // Retorna o cache e tenta atualizar em background
-        fetch(event.request).then((networkResponse) => {
-          if (networkResponse && networkResponse.status === 200) {
-            caches.open(CACHE_NAME).then((cache) => {
-              cache.put(event.request, networkResponse);
-            });
-          }
-        }).catch(() => {});
         return cachedResponse;
       }
-
-      // Se não está no cache, busca na rede
       return fetch(event.request).then((networkResponse) => {
-        if (!networkResponse || networkResponse.status !== 200) {
-          return networkResponse;
+        if (networkResponse && networkResponse.status === 200) {
+          const copy = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
         }
-
-        const responseToCache = networkResponse.clone();
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(event.request, responseToCache);
-        });
-
         return networkResponse;
-      }).catch(() => {
-        // Se estiver offline e pedir HTML, serve o app.html
-        if (event.request.headers.get('accept')?.includes('text/html')) {
-          return caches.match('./app.html');
-        }
       });
     })
   );
