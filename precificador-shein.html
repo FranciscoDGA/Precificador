@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Precificador Shein & TikTok Shop | Calculadora de Margem e Taxas</title>
+  <meta name="description" content="Calcule preços ideais e margem líquida para vender na Shein Brasil e no TikTok Shop. Simule comissões, afiliados e devoluções.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/landing.css">
+  <link rel="stylesheet" href="assets/css/app.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0b0f19">
+</head>
+<body>
+
+  <!-- Navegação -->
+  <nav class="landing-nav">
+    <div class="container nav-container">
+      <a href="index.html" class="brand">
+        <div class="brand-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5">
+            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+          </svg>
+        </div>
+        <span>Precificador<span style="color:#3b82f6;">Pro</span></span>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="index.html">Início</a></li>
+        <li><a href="precificador-mercadolivre.html">Mercado Livre</a></li>
+        <li><a href="precificador-amazon.html">Amazon</a></li>
+        <li><a href="precificador-shopee.html">Shopee</a></li>
+        <li><a href="precificador-shein.html" style="color:#fff; font-weight:700;">Shein & TikTok</a></li>
+      </ul>
+
+      <div class="nav-cta">
+        <a href="app.html?canal=Shein" class="btn btn-primary btn-sm">Abrir no App</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero do Canal -->
+  <header class="hero" style="padding: 50px 0 40px;">
+    <div class="container">
+      <span class="badge" style="background:rgba(236, 72, 153, 0.15); color:#ec4899; border:1px solid rgba(236, 72, 153, 0.3); margin-bottom:16px;">
+        Shein Marketplace & TikTok Shop
+      </span>
+      <h1 style="font-size: clamp(2rem, 4vw, 3.2rem);">Calculadora para Shein e TikTok Shop</h1>
+      <p class="hero-subtitle">
+        Domine a precificação em canais de moda, beleza e comércio social. Simule comissões da Shein (16%), TikTok Shop (10% a 12%), comissão de criadores/afiliados e índice de devoluções.
+      </p>
+
+      <!-- Simulador Integrado -->
+      <div class="demo-card-wrapper" style="margin-top: 30px; max-width: 920px;">
+        <div class="panel-card" style="text-align: left;">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title" style="color:#fff;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ec4899" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                Simulador: Shein / TikTok Shop
+              </h2>
+              <p class="panel-subtitle">Ajuste os parâmetros fiscais e de afiliados para proteger seu lucro.</p>
+            </div>
+            <span id="shnStatus" class="status-pill ok">OK</span>
+          </div>
+
+          <div class="dashboard-grid" style="margin-bottom:0;">
+            <!-- Inputs -->
+            <div>
+              <div class="form-grid-2">
+                <div class="form-field">
+                  <label>Plataforma Alvo</label>
+                  <div class="input-addon-group">
+                    <select id="shnPlatform">
+                      <option value="16.0">Shein Brasil (16% comissão)</option>
+                      <option value="10.0">TikTok Shop Brasil (10% comissão)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-field">
+                  <label>Custo do Produto (R$)</label>
+                  <div class="input-addon-group input-addon-left">
+                    <span class="addon-left">R$</span>
+                    <input type="number" id="shnCost" value="32.00" min="0" step="1">
+                  </div>
+                </div>
+
+                <div class="form-field">
+                  <label>Embalagem & Sacola</label>
+                  <div class="input-addon-group input-addon-left">
+                    <span class="addon-left">R$</span>
+                    <input type="number" id="shnPackaging" value="2.80" min="0" step="0.5">
+                  </div>
+                </div>
+
+                <div class="form-field">
+                  <label>Custo Fixo Rateado</label>
+                  <div class="input-addon-group input-addon-left">
+                    <span class="addon-left">R$</span>
+                    <input type="number" id="shnFixed" value="3.00" min="0" step="0.5">
+                  </div>
+                </div>
+
+                <div class="form-field">
+                  <label>Comissão Afiliados / Criadores</label>
+                  <div class="input-addon-group input-addon-right">
+                    <input type="number" id="shnAffiliate" value="5.00" min="0" max="30" step="0.5">
+                    <span class="addon-right">%</span>
+                  </div>
+                </div>
+
+                <div class="form-field">
+                  <label>Devoluções / Trocas (Moda)</label>
+                  <div class="input-addon-group input-addon-right">
+                    <input type="number" id="shnLoss" value="3.50" min="0" max="25" step="0.5">
+                    <span class="addon-right">%</span>
+                  </div>
+                </div>
+
+                <div class="form-field">
+                  <label>Imposto DAS / Simples</label>
+                  <div class="input-addon-group input-addon-right">
+                    <input type="number" id="shnTax" value="6.00" min="0" max="30" step="0.5">
+                    <span class="addon-right">%</span>
+                  </div>
+                </div>
+
+                <div class="form-field">
+                  <label>Taxa Fixa (se aplicável)</label>
+                  <div class="input-addon-group input-addon-left">
+                    <span class="addon-left">R$</span>
+                    <input type="number" id="shnFixedFee" value="0.00" min="0" step="0.5">
+                  </div>
+                </div>
+
+                <div class="form-field" style="grid-column:span 2;">
+                  <label>Margem Líquida Desejada (%)</label>
+                  <div class="input-addon-group input-addon-right">
+                    <input type="number" id="shnMargin" value="20.00" min="0" max="80" step="0.5">
+                    <span class="addon-right">%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Resultados -->
+            <div style="display:flex; flex-direction:column; justify-content:space-between; background:var(--bg-input); padding:20px; border-radius:var(--radius-md); border:1px solid var(--border);">
+              <div>
+                <div style="margin-bottom:14px;">
+                  <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Preço Mínimo (Break-Even)</span>
+                  <div id="shnResMin" style="font-size:1.5rem; font-weight:800; color:#fff;">R$ 0,00</div>
+                  <small style="color:var(--text-subtle);">Sem lucro nem prejuízo</small>
+                </div>
+
+                <div style="margin-bottom:14px; background:rgba(16,185,129,0.08); padding:10px 14px; border-radius:var(--radius-sm); border:1px solid rgba(16,185,129,0.2);">
+                  <span style="font-size:0.75rem; color:#34d399; text-transform:uppercase; font-weight:700;">Preço Ideal Recomendado</span>
+                  <div id="shnResIdeal" style="font-size:1.8rem; font-weight:800; color:#34d399;">R$ 0,00</div>
+                  <small style="color:var(--text-muted);">Com margem líquida e afiliados pagos</small>
+                </div>
+
+                <div style="margin-bottom:14px;">
+                  <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Lucro Líquido Unitário</span>
+                  <div id="shnResProfit" style="font-size:1.4rem; font-weight:800; color:#38bdf8;">R$ 0,00</div>
+                </div>
+
+                <div>
+                  <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Comissão da Plataforma</span>
+                  <div id="shnResCommVal" style="font-size:1.1rem; font-weight:700; color:#fbbf24;">R$ 0,00</div>
+                </div>
+              </div>
+
+              <div style="margin-top:16px;">
+                <a href="app.html?canal=Shein" class="btn btn-primary" style="width:100%; background:linear-gradient(135deg, #ec4899, #be185d);">
+                  Salvar no App Completo
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Dicas para Shein e TikTok -->
+  <section style="padding: 60px 0; border-top: 1px solid var(--border);">
+    <div class="container" style="max-width: 900px;">
+      <h2 style="font-size: 1.8rem; margin-bottom: 14px;">Dicas Estratégicas para Moda e Social Commerce</h2>
+
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:20px; margin-bottom:30px;">
+        <div class="feature-card">
+          <h3 style="color:#ec4899; font-size:1.1rem;">Índice de Devolução na Moda</h3>
+          <p>No segmento têxtil e calçados, o percentual de troca por tamanho varia entre 3% a 7%. Sempre embuta essa provisão na calculadora para não pagar frete reverso do próprio bolso.</p>
+        </div>
+        <div class="feature-card">
+          <h3 style="color:#ec4899; font-size:1.1rem;">Parcerias com Afiliados no TikTok</h3>
+          <p>No TikTok Shop, o motor de vendas são os criadores de conteúdo gerando vídeos curtos e transmissões ao vivo com seu produto na sacolinha. Reserve de 5% a 15% para afiliados.</p>
+        </div>
+      </div>
+
+      <div style="margin-top:40px; text-align:center;">
+        <a href="app.html?canal=Shein" class="btn btn-primary btn-lg">Abrir App com Shein & TikTok</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Rodapé -->
+  <footer>
+    <div class="container">
+      <div class="footer-bottom" style="border-top:none; padding-top:0;">
+        <span>&copy; 2026 Precificador Pro. Ferramenta de apoio a sellers Shein e TikTok Shop.</span>
+        <div>
+          <a href="index.html" style="color:var(--text-muted); margin-right:16px;">Início</a>
+          <a href="app.html" style="color:var(--text-muted); margin-right:16px;">App</a>
+          <a href="politica-de-privacidade.html" style="color:var(--text-muted);">Privacidade</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script de cálculo Shein / TikTok -->
+  <script>
+    (function() {
+      const ids = ['shnPlatform', 'shnCost', 'shnPackaging', 'shnFixed', 'shnAffiliate', 'shnLoss', 'shnTax', 'shnFixedFee', 'shnMargin'];
+      const money = v => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v || 0);
+
+      function calcShn() {
+        const comm = (parseFloat(document.getElementById('shnPlatform').value) || 16) / 100;
+        const cost = parseFloat(document.getElementById('shnCost').value) || 0;
+        const pack = parseFloat(document.getElementById('shnPackaging').value) || 0;
+        const fixed = parseFloat(document.getElementById('shnFixed').value) || 0;
+        const aff = (parseFloat(document.getElementById('shnAffiliate').value) || 0) / 100;
+        const loss = (parseFloat(document.getElementById('shnLoss').value) || 0) / 100;
+        const tax = (parseFloat(document.getElementById('shnTax').value) || 0) / 100;
+        const fixedFee = parseFloat(document.getElementById('shnFixedFee').value) || 0;
+        const margin = (parseFloat(document.getElementById('shnMargin').value) || 0) / 100;
+
+        const baseCost = cost + pack + fixed + fixedFee;
+        const varFees = comm + aff + loss + tax;
+        const minDenom = 1 - varFees;
+        const idealDenom = minDenom - margin;
+
+        const elMin = document.getElementById('shnResMin');
+        const elIdeal = document.getElementById('shnResIdeal');
+        const elProfit = document.getElementById('shnResProfit');
+        const elComm = document.getElementById('shnResCommVal');
+        const elStatus = document.getElementById('shnStatus');
+
+        if (minDenom > 0 && idealDenom > 0) {
+          const minPrice = baseCost / minDenom;
+          const idealPrice = baseCost / idealDenom;
+          const profit = (idealPrice * minDenom) - baseCost;
+          const commVal = (idealPrice * comm) + fixedFee;
+
+          elMin.textContent = money(minPrice);
+          elIdeal.textContent = money(idealPrice);
+          elProfit.textContent = money(profit);
+          elComm.textContent = money(commVal);
+          elStatus.textContent = 'OK';
+          elStatus.className = 'status-pill ok';
+        } else {
+          elMin.textContent = '—';
+          elIdeal.textContent = 'Inviável';
+          elProfit.textContent = '—';
+          elComm.textContent = '—';
+          elStatus.textContent = 'REVER MARGEM';
+          elStatus.className = 'status-pill bad';
+        }
+      }
+
+      ids.forEach(id => {
+        document.getElementById(id)?.addEventListener('input', calcShn);
+      });
+      calcShn();
+    })();
+  </script>
+</body>
+</html>

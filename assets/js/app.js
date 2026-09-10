@@ -74,6 +74,19 @@
     const current = select.value;
     const channelNames = Object.keys(state.channels);
     select.innerHTML = channelNames.map(name => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`).join('');
+
+    // Verificar se veio parâmetro de canal na URL (?canal=amazon, ?canal=shopee, etc.)
+    const params = new URLSearchParams(window.location.search);
+    const canalParam = params.get('canal');
+    if (canalParam) {
+      const match = channelNames.find(c => c.toLowerCase().includes(canalParam.toLowerCase()));
+      if (match) {
+        select.value = match;
+        updateChannelReadout();
+        return;
+      }
+    }
+
     if (channelNames.includes(current)) {
       select.value = current;
     } else {

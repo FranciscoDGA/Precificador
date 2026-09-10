@@ -3,11 +3,15 @@
  * Garante funcionamento 100% Offline no celular e desktop
  */
 
-const CACHE_NAME = 'precificador-pro-v2.1';
+const CACHE_NAME = 'precificador-pro-v2.2';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './app.html',
+  './precificador-mercadolivre.html',
+  './precificador-amazon.html',
+  './precificador-shopee.html',
+  './precificador-shein.html',
   './politica-de-privacidade.html',
   './termos-de-uso.html',
   './sobre.html',

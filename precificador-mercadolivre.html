@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Precificador Mercado Livre | Regra R$ 79, Frete Grátis e Lucro</title>
+  <meta name="description" content="Calculadora de preços para Mercado Livre. Simule comissão Clássico e Premium, taxa fixa abaixo de R$ 79,00, frete Mercado Envios e margem líquida.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/landing.css">
+  <link rel="stylesheet" href="assets/css/app.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0b0f19">
+</head>
+<body>
+
+  <!-- Navegação -->
+  <nav class="landing-nav">
+    <div class="container nav-container">
+      <a href="index.html" class="brand">
+        <div class="brand-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5">
+            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+          </svg>
+        </div>
+        <span>Precificador<span style="color:#3b82f6;">Pro</span></span>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="index.html">Início</a></li>
+        <li><a href="precificador-mercadolivre.html" style="color:#fff; font-weight:700;">Mercado Livre</a></li>
+        <li><a href="precificador-amazon.html">Amazon</a></li>
+        <li><a href="precificador-shopee.html">Shopee</a></li>
+        <li><a href="precificador-shein.html">Shein & TikTok</a></li>
+      </ul>
+
+      <div class="nav-cta">
+        <a href="app.html?canal=Mercado%20Livre" class="btn btn-primary btn-sm">Abrir no App</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero do Canal -->
+  <header class="hero" style="padding: 50px 0 40px;">
+    <div class="container">
+      <span class="badge" style="background:rgba(255, 230, 0, 0.15); color:#ffe600; border:1px solid rgba(255, 230, 0, 0.3); margin-bottom:16px;">
+        Mercado Livre Marketplace
+      </span>
+      <h1 style="font-size: clamp(2rem, 4vw, 3.2rem);">Calculadora para Mercado Livre</h1>
+      <p class="hero-subtitle">
+        Calcule o preço exato considerando a regra de <strong>taxa fixa de R$ 6,00 abaixo de R$ 79</strong>, o custo de frete grátis obrigatório acima de R$ 79 e as comissões do anúncio Clássico e Premium.
+      </p>
+
+      <!-- Simulador Integrado -->
+      <div class="demo-card-wrapper" style="margin-top: 30px; max-width: 920px;">
+        <div class="panel-card" style="text-align: left;">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title" style="color:#fff;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffe600" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                Simulador Específico: Mercado Livre
+              </h2>
+              <p class="panel-subtitle">Evite a armadilha do frete grátis que consome a margem de contribuição.</p>
+            </div>
+            <span id="mlStatus" class="status-pill ok">OK</span>
+          </div>
+
+          <div class="dashboard-grid" style="margin-bottom:0;">
+            <!-- Inputs -->
+            <div>
+              <div class="form-grid-2">
+                <div class="form-field">
+                  <label>Tipo de Anúncio</label>
+                  <div class="input-addon-group">
+                    <select id="mlAdPlan">
+                      <option value="16.0">Premium (16% a 19% com 12x)</option>
+                      <option value="12.0">Clássico (12% a 14%)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-field">
+                  <label>Custo do Produto (R$)</label>
+                  <div class="input-addon-group input-addon-left">
+                    <span class="addon-left">R$</span>
+                    <input type="number" id="mlCost" value="38.00" min="0" step="1">
+                  </div>
+                </div>
+
+                <div class="form-field">
+                  <label>Embalagem & Etiquetas</label>
+                  <div class="input-addon-group input-addon-left">
+                    <span class="addon-left">R$</span>
+                    <input type="number" id="mlPackaging" value="2.50" min="0" step="0.5">
+                  </div>
+                </div>
+
+                <div class="form-field">
+                  <label>Frete Pago (se preço >= R$ 79)</label>
+                  <div class="input-addon-group input-addon-left">
+                    <span class="addon-left">R$</span>
+                    <input type="number" id="mlFreight" value="0.00" min="0" step="1">
+                  </div>
+                </div>
+
+                <div class="form-field">
+                  <label>Taxa Fixa ML (Abaixo de R$ 79)</label>
+                  <div class="input-addon-group input-addon-left">
+                    <span class="addon-left">R$</span>
+                    <input type="number" id="mlFixedFee" value="6.00" min="0" step="0.5">
+                  </div>
+                </div>
+
+                <div class="form-field">
+                  <label>Custo Fixo Rateado</label>
+                  <div class="input-addon-group input-addon-left">
+                    <span class="addon-left">R$</span>
+                    <input type="number" id="mlFixed" value="3.00" min="0" step="0.5">
+                  </div>
+                </div>
+
+                <div class="form-field">
+                  <label>Imposto DAS / Simples</label>
+                  <div class="input-addon-group input-addon-right">
+                    <input type="number" id="mlTax" value="6.00" min="0" max="30" step="0.5">
+                    <span class="addon-right">%</span>
+                  </div>
+                </div>
+
+                <div class="form-field">
+                  <label>Mercado Ads (ACOS)</label>
+                  <div class="input-addon-group input-addon-right">
+                    <input type="number" id="mlAds" value="0.00" min="0" max="30" step="0.5">
+                    <span class="addon-right">%</span>
+                  </div>
+                </div>
+
+                <div class="form-field" style="grid-column:span 2;">
+                  <label>Margem Líquida Desejada (%)</label>
+                  <div class="input-addon-group input-addon-right">
+                    <input type="number" id="mlMargin" value="18.00" min="0" max="80" step="0.5">
+                    <span class="addon-right">%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Resultados -->
+            <div style="display:flex; flex-direction:column; justify-content:space-between; background:var(--bg-input); padding:20px; border-radius:var(--radius-md); border:1px solid var(--border);">
+              <div>
+                <div style="margin-bottom:14px;">
+                  <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Preço Mínimo (Zero a Zero)</span>
+                  <div id="mlResMin" style="font-size:1.5rem; font-weight:800; color:#fff;">R$ 0,00</div>
+                  <small style="color:var(--text-subtle);">Sem lucro nem prejuízo</small>
+                </div>
+
+                <div style="margin-bottom:14px; background:rgba(16,185,129,0.08); padding:10px 14px; border-radius:var(--radius-sm); border:1px solid rgba(16,185,129,0.2);">
+                  <span style="font-size:0.75rem; color:#34d399; text-transform:uppercase; font-weight:700;">Preço Ideal no Mercado Livre</span>
+                  <div id="mlResIdeal" style="font-size:1.8rem; font-weight:800; color:#34d399;">R$ 0,00</div>
+                  <small style="color:var(--text-muted);">Com margem líquida garantida</small>
+                </div>
+
+                <div style="margin-bottom:14px;">
+                  <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Lucro Líquido no Bolso</span>
+                  <div id="mlResProfit" style="font-size:1.4rem; font-weight:800; color:#38bdf8;">R$ 0,00</div>
+                </div>
+
+                <div>
+                  <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Taxas Pagas ao Mercado Livre</span>
+                  <div id="mlResFees" style="font-size:1.1rem; font-weight:700; color:#fbbf24;">R$ 0,00</div>
+                </div>
+              </div>
+
+              <div style="margin-top:16px;">
+                <a href="app.html?canal=Mercado%20Livre" class="btn btn-primary" style="width:100%;">
+                  Salvar no Meu Catálogo Completo
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Regras do Mercado Livre -->
+  <section style="padding: 60px 0; border-top: 1px solid var(--border);">
+    <div class="container" style="max-width: 900px;">
+      <h2 style="font-size: 1.8rem; margin-bottom: 14px;">A Regra Crucial dos R$ 79,00 no Mercado Livre</h2>
+
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:20px; margin-bottom:30px;">
+        <div class="feature-card">
+          <h3 style="color:#ffe600; font-size:1.1rem;">Abaixo de R$ 79,00</h3>
+          <p>O comprador paga o frete. O vendedor paga a comissão percentual (12% a 19%) + uma <strong>taxa fixa de R$ 6,00 por unidade vendida</strong>.</p>
+        </div>
+        <div class="feature-card">
+          <h3 style="color:#ffe600; font-size:1.1rem;">A partir de R$ 79,00</h3>
+          <p>A taxa fixa de R$ 6,00 é zerada, mas o vendedor é <strong>obrigado a pagar o frete grátis</strong> do Mercado Envios (com desconto de até 50% para reputação verde).</p>
+        </div>
+      </div>
+
+      <div class="panel-card" style="background:rgba(255, 230, 0, 0.06); border-color:rgba(255, 230, 0, 0.2);">
+        <h3 style="color:#ffe600; margin-bottom:8px;">O "Buraco Negro" dos R$ 75 a R$ 85:</h3>
+        <p style="color:var(--text-muted); font-size:0.92rem; line-height:1.6; margin:0;">
+          Vender um produto por R$ 80,00 pode dar <strong>menos lucro líquido</strong> do que vender por R$ 78,90! Isso ocorre porque ao cruzar os R$ 79, o frete obrigatório de R$ 20 a R$ 30 passa a ser cobrado do vendedor, superando o valor da taxa fixa de R$ 6. Utilize sempre o simulador para checar se vale a pena vender em kits ou manter abaixo da faixa!
+        </p>
+      </div>
+
+      <div style="margin-top:40px; text-align:center;">
+        <a href="app.html?canal=Mercado%20Livre" class="btn btn-primary btn-lg">Abrir no App com Mercado Livre</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Rodapé -->
+  <footer>
+    <div class="container">
+      <div class="footer-bottom" style="border-top:none; padding-top:0;">
+        <span>&copy; 2026 Precificador Pro. Ferramenta para sellers Mercado Livre.</span>
+        <div>
+          <a href="index.html" style="color:var(--text-muted); margin-right:16px;">Início</a>
+          <a href="app.html" style="color:var(--text-muted); margin-right:16px;">App</a>
+          <a href="politica-de-privacidade.html" style="color:var(--text-muted);">Privacidade</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script de cálculo Mercado Livre -->
+  <script>
+    (function() {
+      const ids = ['mlAdPlan', 'mlCost', 'mlPackaging', 'mlFreight', 'mlFixedFee', 'mlFixed', 'mlTax', 'mlAds', 'mlMargin'];
+      const money = v => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v || 0);
+
+      function calcML() {
+        const comm = (parseFloat(document.getElementById('mlAdPlan').value) || 16) / 100;
+        const cost = parseFloat(document.getElementById('mlCost').value) || 0;
+        const pack = parseFloat(document.getElementById('mlPackaging').value) || 0;
+        const freight = parseFloat(document.getElementById('mlFreight').value) || 0;
+        let fixedFee = parseFloat(document.getElementById('mlFixedFee').value) || 0;
+        const fixed = parseFloat(document.getElementById('mlFixed').value) || 0;
+        const tax = (parseFloat(document.getElementById('mlTax').value) || 0) / 100;
+        const ads = (parseFloat(document.getElementById('mlAds').value) || 0) / 100;
+        const margin = (parseFloat(document.getElementById('mlMargin').value) || 0) / 100;
+
+        const baseCost = cost + pack + freight + fixed + fixedFee;
+        const varFees = comm + tax + ads;
+        const minDenom = 1 - varFees;
+        const idealDenom = minDenom - margin;
+
+        const elMin = document.getElementById('mlResMin');
+        const elIdeal = document.getElementById('mlResIdeal');
+        const elProfit = document.getElementById('mlResProfit');
+        const elFees = document.getElementById('mlResFees');
+        const elStatus = document.getElementById('mlStatus');
+
+        if (minDenom > 0 && idealDenom > 0) {
+          const minPrice = baseCost / minDenom;
+          const idealPrice = baseCost / idealDenom;
+          const profit = (idealPrice * minDenom) - baseCost;
+          const feesVal = (idealPrice * comm) + fixedFee + freight;
+
+          elMin.textContent = money(minPrice);
+          elIdeal.textContent = money(idealPrice);
+          elProfit.textContent = money(profit);
+          elFees.textContent = money(feesVal);
+          elStatus.textContent = 'OK';
+          elStatus.className = 'status-pill ok';
+        } else {
+          elMin.textContent = '—';
+          elIdeal.textContent = 'Inviável';
+          elProfit.textContent = '—';
+          elFees.textContent = '—';
+          elStatus.textContent = 'REVER MARGEM';
+          elStatus.className = 'status-pill bad';
+        }
+      }
+
+      ids.forEach(id => {
+        document.getElementById(id)?.addEventListener('input', calcML);
+      });
+      calcML();
+    })();
+  </script>
+</body>
+</html>
