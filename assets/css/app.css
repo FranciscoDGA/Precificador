@@ -589,7 +589,7 @@
   }
 }
 
-/* Mobile Responsive */
+/* Mobile Responsive - Pixel-Perfect & Fluid */
 @media (max-width: 980px) {
   .dashboard-grid {
     grid-template-columns: 1fr;
@@ -603,22 +603,136 @@
 }
 
 @media (max-width: 680px) {
-  .bottom-nav {
+  .app-header {
+    padding: 8px 0;
+  }
+  .app-header-inner {
+    gap: 8px;
+  }
+  .app-brand h1 {
+    font-size: 0.98rem;
+  }
+  .storage-status {
+    display: none;
+  }
+  .app-actions {
+    display: none;
+  }
+  .app-main {
+    padding: 14px 0;
+  }
+  .app-tabs {
+    padding-bottom: 6px;
+    margin-bottom: 14px;
+    gap: 6px;
+  }
+  .tab-btn {
+    padding: 7px 12px;
+    font-size: 0.78rem;
+    gap: 6px;
+  }
+  .panel-card {
+    padding: 16px 14px;
+    border-radius: var(--radius-md);
+  }
+  .panel-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .panel-header > div:last-child {
+    width: 100%;
     display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .panel-header .btn {
+    width: 100%;
+  }
+  .panel-title {
+    font-size: 1.05rem;
+    line-height: 1.3;
+    word-break: break-word;
+  }
+  .panel-subtitle {
+    font-size: 0.78rem;
   }
   .form-grid-3, .form-grid-2 {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
+    gap: 12px;
   }
-  .metrics-row {
-    grid-template-columns: 1fr;
+  .form-field[style*="grid-column"] {
+    grid-column: span 1 !important;
+  }
+  .input-addon-group input,
+  .input-addon-group select {
+    font-size: 15px;
+    padding: 9px 10px;
+    min-width: 0;
   }
   .channel-meta-box {
     grid-template-columns: 1fr;
+    padding: 12px;
+    gap: 10px;
   }
   .results-box {
     grid-template-columns: 1fr;
+    gap: 10px;
   }
-  .app-actions .btn:not(.btn-icon) {
-    display: none;
+  .result-card {
+    padding: 12px;
+  }
+  .result-card .res-value {
+    font-size: 1.3rem;
+  }
+  .metrics-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .metric-stat {
+    padding: 12px;
+  }
+  .metric-stat strong {
+    font-size: 1.25rem;
+  }
+  .combo-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .combo-card {
+    padding: 16px 14px;
+  }
+  .goal-kpis {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .goal-kpi-card {
+    padding: 14px;
+  }
+  .whatsapp-box {
+    padding: 12px;
+    margin-top: 12px;
+  }
+  .whatsapp-bubble {
+    font-size: 0.84rem;
+    padding: 12px 10px;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    line-height: 1.5;
+  }
+  .bottom-nav {
+    display: flex;
+    height: 60px;
+    padding: 4px 6px;
+    background: rgba(11, 15, 25, 0.96);
+  }
+  .bottom-nav-item {
+    font-size: 0.68rem;
+    padding: 3px 2px;
+  }
+  .bottom-nav-item svg {
+    width: 18px;
+    height: 18px;
   }
 }

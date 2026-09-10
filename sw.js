@@ -3,7 +3,7 @@
  * Garante funcionamento Offline com suporte a Clean URLs da Vercel e navegação fluida
  */
 
-const CACHE_NAME = 'precificador-pro-v4.0';
+const CACHE_NAME = 'precificador-pro-v4.1';
 
 const STATIC_ASSETS = [
   '/',
