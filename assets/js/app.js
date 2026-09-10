@@ -497,9 +497,243 @@
     if (modal) modal.classList.add('active');
   }
 
-  function hideProModal() {
-    const modal = document.getElementById('proModal');
-    if (modal) modal.classList.remove('active');
+  // ==========================================
+  // NOVOS MÓDULOS EXPANDIDOS (v3.5)
+  // ==========================================
+
+  // 1. Gerenciador de Abas
+  function initTabs() {
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetId = btn.getAttribute('data-tab');
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+
+        btn.classList.add('active');
+        const targetPane = document.getElementById(targetId);
+        if (targetPane) targetPane.classList.add('active');
+
+        if (targetId === 'tab-comparador') renderMultiChannelComparison();
+        if (targetId === 'tab-kits') renderCombos();
+        if (targetId === 'tab-metas') renderGoals();
+        if (targetId === 'tab-cotacao') renderWhatsAppPreview();
+      });
+    });
+  }
+
+  // 2. Comparador Multi-Canal Lado a Lado
+  function renderMultiChannelComparison() {
+    const tbody = document.getElementById('multiChannelTableBody');
+    if (!tbody) return;
+
+    const baseForm = getFormData();
+    const prodName = baseForm.product || 'Produto em Simulação';
+    const elProd = document.getElementById('compCurrentProduct');
+    const elCost = document.getElementById('compCurrentCost');
+
+    if (elProd) elProd.textContent = prodName;
+    if (elCost) elCost.textContent = money(baseForm.cost + baseForm.packaging + baseForm.freight + baseForm.other + baseForm.fixed);
+
+    const channelNames = Object.keys(state.channels);
+    const results = channelNames.map(name => {
+      const c = state.channels[name];
+      const itemData = {
+        ...baseForm,
+        channel: name,
+        commission: (c.commission || 0) / 100,
+        fixedFee: c.fixedFee || 0,
+        payment: (c.payment || 0) / 100
+      };
+      return calculate(itemData);
+    });
+
+    // Identifica melhores canais
+    const validResults = results.filter(r => r.idealPrice !== null && r.profit > 0);
+    let maxProfit = -Infinity, minPrice = Infinity;
+    validResults.forEach(r => {
+      if (r.profit > maxProfit) maxProfit = r.profit;
+      if (r.idealPrice < minPrice) minPrice = r.idealPrice;
+    });
+
+    tbody.innerHTML = results.map(r => {
+      const isMaxProfit = r.profit && r.profit === maxProfit;
+      const isMinPrice = r.idealPrice && r.idealPrice === minPrice;
+      let badgeHtml = '—';
+      if (isMaxProfit) badgeHtml = '<span class="badge badge-success">Maior Lucro</span>';
+      else if (isMinPrice) badgeHtml = '<span class="badge" style="background:#2563eb; color:#fff;">Mais Competitivo</span>';
+
+      return `
+        <tr>
+          <td><strong style="color:#fff;">${escapeHtml(r.channel)}</strong></td>
+          <td class="num">${pct((r.commission + r.payment) * 100)}</td>
+          <td class="num">${money(r.fixedFee)}</td>
+          <td class="num" style="color:var(--text-muted);">${r.minimumPrice !== null ? money(r.minimumPrice) : '—'}</td>
+          <td class="num"><strong style="color:#fff;">${r.idealPrice !== null ? money(r.idealPrice) : '—'}</strong></td>
+          <td class="num" style="color:#34d399; font-weight:700;">${r.profit !== null ? money(r.profit) : '—'}</td>
+          <td class="num">${r.realMargin !== null ? pct(r.realMargin * 100) : '—'}</td>
+          <td>${badgeHtml}</td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  // 3. Simulador de Kits & Combos (1x, 2x, 3x, 5x)
+  function renderCombos() {
+    const container = document.getElementById('comboGridContainer');
+    if (!container) return;
+
+    const baseForm = getFormData();
+    const displayChannel = document.getElementById('comboChannelDisplay');
+    if (displayChannel) displayChannel.value = baseForm.channel;
+
+    const userDiscount = (parseFloat(document.getElementById('comboDiscountPct')?.value) || 5) / 100;
+    const packDiscount = (parseFloat(document.getElementById('comboPackDiscount')?.value) || 25) / 100;
+
+    const multipliers = [
+      { qty: 1, label: '1 Unidade (Avulso)', packMult: 1.0, disc: 0, tag: 'Padrão' },
+      { qty: 2, label: 'Kit Leve 2', packMult: 1.5, disc: userDiscount, tag: 'Mais Vendido' },
+      { qty: 3, label: 'Kit Leve 3', packMult: 1.8, disc: userDiscount * 1.3, tag: 'Melhor Custo-Benefício' },
+      { qty: 5, label: 'Super Combo 5x', packMult: 2.2, disc: userDiscount * 1.8, tag: 'Maior Lucro Bruto' }
+    ];
+
+    const singleResult = calculate(baseForm);
+    const singlePrice = singleResult.idealPrice || 0;
+
+    container.innerHTML = multipliers.map((m, idx) => {
+      // Custos proporcionais
+      const cost = baseForm.cost * m.qty;
+      const packaging = (baseForm.packaging * m.qty) * (1 - (packDiscount * (m.qty > 1 ? 1 : 0)));
+      const freight = baseForm.freight; // Frete único diluído
+      const fixed = baseForm.fixed * (m.qty > 1 ? 1.3 : 1.0); // Fixo diluído
+
+      const comboData = {
+        ...baseForm,
+        cost,
+        packaging,
+        freight,
+        fixed,
+        targetMargin: baseForm.targetMargin
+      };
+
+      const res = calculate(comboData);
+      const standardFullPrice = singlePrice * m.qty;
+      const discountedKitPrice = res.idealPrice ? res.idealPrice * (1 - m.disc) : 0;
+      const clientSavings = Math.max(0, standardFullPrice - discountedKitPrice);
+      const unitPriceInKit = m.qty > 0 ? discountedKitPrice / m.qty : 0;
+
+      const isFeatured = idx === 1; // 2 unidades é o mais popular
+
+      return `
+        <div class="combo-card ${isFeatured ? 'featured' : ''}">
+          ${m.tag ? `<span class="combo-badge" style="${isFeatured ? 'background:#10b981;' : 'background:#3b82f6;'}">${escapeHtml(m.tag)}</span>` : ''}
+          <div>
+            <h3 style="font-size:1.15rem; color:#fff; margin-bottom:4px;">${escapeHtml(m.label)}</h3>
+            <span style="font-size:0.76rem; color:var(--text-muted);">${m.qty} unidades no mesmo pacote</span>
+
+            <div style="margin:16px 0 10px;">
+              <span style="font-size:0.74rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Preço Sugerido do Kit</span>
+              <div style="font-size:1.6rem; font-weight:800; color:#fff;">${money(discountedKitPrice)}</div>
+              <small style="color:var(--text-muted);">${money(unitPriceInKit)} cada item no kit</small>
+            </div>
+
+            ${clientSavings > 0 ? `
+              <div style="background:rgba(59,130,246,0.1); border:1px solid rgba(59,130,246,0.25); border-radius:var(--radius-sm); padding:6px 10px; margin-bottom:12px;">
+                <small style="color:#60a5fa; font-weight:700;">Cliente economiza ${money(clientSavings)}</small>
+              </div>
+            ` : '<div style="height:32px;"></div>'}
+          </div>
+
+          <div style="border-top:1px solid var(--border); padding-top:12px; margin-top:8px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:0.8rem; color:var(--text-muted);">Lucro Líquido no Bolso:</span>
+              <strong style="color:#34d399; font-size:1.05rem;">${money(res.profit)}</strong>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // 4. Calculadora de Metas de Lucro & Ponto de Equilíbrio
+  function renderGoals() {
+    const fixedCosts = parseFloat(document.getElementById('goalFixedCosts')?.value) || 0;
+    const targetProfit = parseFloat(document.getElementById('goalTargetProfit')?.value) || 0;
+    const workingDays = parseInt(document.getElementById('goalWorkingDays')?.value) || 30;
+
+    const baseForm = getFormData();
+    const res = calculate(baseForm);
+
+    const price = res.idealPrice || 50;
+    const unitProfit = res.profit && res.profit > 0 ? res.profit : (price * 0.20); // Fallback 20% margem
+
+    const totalTargetProfit = fixedCosts + targetProfit;
+    const unitsMonth = unitProfit > 0 ? Math.ceil(totalTargetProfit / unitProfit) : 0;
+    const unitsDay = workingDays > 0 ? Math.ceil(unitsMonth / workingDays) : 0;
+    const targetRevenue = unitsMonth * price;
+
+    const marginRate = price > 0 ? (unitProfit / price) : 0.2;
+    const breakEvenRevenue = marginRate > 0 ? (fixedCosts / marginRate) : 0;
+
+    const elBreakEven = document.getElementById('goalBreakEvenRevenue');
+    const elTargetRev = document.getElementById('goalTargetRevenue');
+    const elUnitsMonth = document.getElementById('goalUnitsMonth');
+    const elUnitsDay = document.getElementById('goalUnitsDay');
+
+    if (elBreakEven) elBreakEven.textContent = money(breakEvenRevenue);
+    if (elTargetRev) elTargetRev.textContent = money(targetRevenue);
+    if (elUnitsMonth) elUnitsMonth.textContent = `${unitsMonth.toLocaleString('pt-BR')} unid.`;
+    if (elUnitsDay) elUnitsDay.textContent = `${unitsDay.toLocaleString('pt-BR')} / dia`;
+  }
+
+  // 5. Cotação Formatada para WhatsApp
+  function generateWhatsAppText() {
+    const baseForm = getFormData();
+    const res = calculate(baseForm);
+
+    const storeName = document.getElementById('quoteStoreName')?.value.trim() || 'Nossa Loja';
+    const payTerms = document.getElementById('quotePaymentTerms')?.value.trim() || 'À vista no Pix ou até 12x no cartão';
+    const shipTerms = document.getElementById('quoteShippingTerms')?.value.trim() || 'Pronta entrega • Envio em até 24h';
+
+    const prodName = baseForm.product || 'Produto de Alta Qualidade';
+    const sku = baseForm.sku ? `\n🏷️ *Código:* ${baseForm.sku}` : '';
+    const unitPrice = res.idealPrice ? money(res.idealPrice) : 'Sob Consulta';
+
+    // Cálculo rápido dos kits
+    const kit2Price = res.idealPrice ? money(res.idealPrice * 2 * 0.95) : '—';
+    const kit3Price = res.idealPrice ? money(res.idealPrice * 3 * 0.92) : '—';
+
+    return `Olá! Segue a cotação oficial da *${storeName}*:
+
+📦 *Produto:* ${prodName}${sku}
+
+💰 *Opções Especiais de Preço:*
+• 1 Unidade: *${unitPrice}*
+• Kit Leve 2: *${kit2Price}* (com 5% OFF)
+• Kit Leve 3: *${kit3Price}* (Mais Vendido 🔥 com 8% OFF)
+
+💳 *Pagamento:* ${payTerms}
+🚚 *Envio:* ${shipTerms}
+
+Ficou com alguma dúvida ou deseja que eu já separe o seu pedido? 😊`;
+  }
+
+  function renderWhatsAppPreview() {
+    const preview = document.getElementById('whatsappPreviewText');
+    if (!preview) return;
+    preview.textContent = generateWhatsAppText();
+  }
+
+  function copyWhatsAppQuote() {
+    const text = generateWhatsAppText();
+    navigator.clipboard.writeText(text).then(() => {
+      const toast = document.getElementById('toast');
+      if (toast) {
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 3000);
+      }
+    }).catch(err => {
+      alert('Cotação copiada com sucesso!');
+    });
   }
 
   // Inicialização
@@ -508,8 +742,9 @@
     populateChannelSelect();
     renderChannelsTable();
     updateProBadges();
+    initTabs();
 
-    // Eventos de Inputs do Formulário
+    // Eventos de Inputs do Formulário Principal
     const inputIds = [
       'productName', 'productSku', 'productCost', 'productPackaging',
       'productFreight', 'productOther', 'productFixed', 'productTax',
@@ -518,7 +753,15 @@
 
     inputIds.forEach(id => {
       const el = document.getElementById(id);
-      if (el) el.addEventListener('input', renderCalculation);
+      if (el) el.addEventListener('input', () => {
+        renderCalculation();
+        // Atualiza módulos se a aba estiver aberta
+        const activeTab = document.querySelector('.tab-btn.active')?.getAttribute('data-tab');
+        if (activeTab === 'tab-comparador') renderMultiChannelComparison();
+        if (activeTab === 'tab-kits') renderCombos();
+        if (activeTab === 'tab-metas') renderGoals();
+        if (activeTab === 'tab-cotacao') renderWhatsAppPreview();
+      });
     });
 
     const channelSel = document.getElementById('channelSelect');
@@ -528,6 +771,21 @@
         renderCalculation();
       });
     }
+
+    // Eventos específicos dos novos módulos
+    ['comboDiscountPct', 'comboPackDiscount'].forEach(id => {
+      document.getElementById(id)?.addEventListener('input', renderCombos);
+    });
+
+    ['goalFixedCosts', 'goalTargetProfit', 'goalWorkingDays'].forEach(id => {
+      document.getElementById(id)?.addEventListener('input', renderGoals);
+    });
+
+    ['quoteStoreName', 'quotePaymentTerms', 'quoteShippingTerms'].forEach(id => {
+      document.getElementById(id)?.addEventListener('input', renderWhatsAppPreview);
+    });
+
+    document.getElementById('btnCopyWhatsApp')?.addEventListener('click', copyWhatsAppQuote);
 
     // Botões de Ação
     document.getElementById('btnAddProduct')?.addEventListener('click', addProduct);
@@ -571,6 +829,10 @@
     // Renderização Inicial
     renderCalculation();
     renderProductsList();
+    renderMultiChannelComparison();
+    renderCombos();
+    renderGoals();
+    renderWhatsAppPreview();
   }
 
   // Inicializar após DOM carregado

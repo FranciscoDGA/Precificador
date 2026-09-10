@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
@@ -78,8 +78,33 @@
   <main class="app-main">
     <div class="container">
 
-      <!-- Simulador e Resultados -->
-      <section class="dashboard-grid" id="secSimulador">
+      <!-- Abas de Navegação do App -->
+      <nav class="app-tabs no-print">
+        <button class="tab-btn active" data-tab="tab-simulador">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+          1. Simulador & Catálogo
+        </button>
+        <button class="tab-btn" data-tab="tab-comparador">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+          2. Comparador Multi-Canal
+        </button>
+        <button class="tab-btn" data-tab="tab-kits">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+          3. Simulador de Kits (1x a 5x)
+        </button>
+        <button class="tab-btn" data-tab="tab-metas">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/></svg>
+          4. Meta & Break-Even Empresa
+        </button>
+        <button class="tab-btn" data-tab="tab-cotacao">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          5. Cotação WhatsApp / PDF
+        </button>
+      </nav>
+
+      <!-- ABA 1: Simulador Unitário, Catálogo & Taxas -->
+      <div class="tab-pane active" id="tab-simulador">
+        <section class="dashboard-grid" id="secSimulador">
         
         <!-- Formulário de Custos -->
         <div class="panel-card">
@@ -364,6 +389,222 @@
           </table>
         </div>
       </section>
+      </div>
+
+      <!-- ABA 2: Comparador Multi-Canal Lado a Lado -->
+      <div class="tab-pane" id="tab-comparador">
+        <section class="panel-card">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+                Comparador Multi-Canal em Tempo Real
+              </h2>
+              <p class="panel-subtitle">Veja instantaneamente onde seu produto dá mais lucro e onde o preço é mais competitivo.</p>
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="window.print()">Imprimir Comparativo</button>
+          </div>
+
+          <div style="background:rgba(37,99,235,0.06); border:1px solid rgba(37,99,235,0.15); border-radius:var(--radius-md); padding:14px; margin-bottom:20px;">
+            <p style="margin:0; font-size:0.88rem; color:var(--text-muted);">
+              Cálculo baseado no produto atual: <strong id="compCurrentProduct" style="color:#fff;">Carregando...</strong> (Custo Base: <strong id="compCurrentCost" style="color:#60a5fa;">R$ 0,00</strong>). Para alterar os custos, edite os campos na aba Simulador.
+            </p>
+          </div>
+
+          <div class="table-container">
+            <table class="app-table">
+              <thead>
+                <tr>
+                  <th>Marketplace</th>
+                  <th class="num">Taxa %</th>
+                  <th class="num">Taxa Fixa</th>
+                  <th class="num">Preço Mínimo</th>
+                  <th class="num">Preço Ideal</th>
+                  <th class="num">Lucro Líquido</th>
+                  <th class="num">Margem Real</th>
+                  <th>Destaque</th>
+                </tr>
+              </thead>
+              <tbody id="multiChannelTableBody">
+                <!-- Preenchido via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+
+      <!-- ABA 3: Simulador Inteligente de Kits & Combos -->
+      <div class="tab-pane" id="tab-kits">
+        <section class="panel-card">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+                Simulador de Kits & Combos (1x, 2x, 3x e 5x)
+              </h2>
+              <p class="panel-subtitle">Aumente seu ticket médio e dilua as taxas fixas e fretes vendendo em pacotes.</p>
+            </div>
+          </div>
+
+          <div class="form-grid-3" style="margin-bottom:20px;">
+            <div class="form-field">
+              <label>Canal Selecionado</label>
+              <div class="input-addon-group">
+                <input type="text" id="comboChannelDisplay" value="Mercado Livre" readonly style="opacity:0.8;">
+              </div>
+            </div>
+            <div class="form-field">
+              <label>Desconto Ofertado no Kit (%)</label>
+              <div class="input-addon-group input-addon-right">
+                <input type="number" id="comboDiscountPct" value="5.0" min="0" max="30" step="0.5">
+                <span class="addon-right">%</span>
+              </div>
+            </div>
+            <div class="form-field">
+              <label>Economia em Embalagem (%)</label>
+              <div class="input-addon-group input-addon-right">
+                <input type="number" id="comboPackDiscount" value="25.0" min="0" max="50" step="1">
+                <span class="addon-right">%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cards dos Kits -->
+          <div class="combo-grid" id="comboGridContainer">
+            <!-- Gerado via JavaScript -->
+          </div>
+        </section>
+      </div>
+
+      <!-- ABA 4: Meta de Lucro & Break-Even Empresarial -->
+      <div class="tab-pane" id="tab-metas">
+        <section class="panel-card">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/></svg>
+                Calculadora de Meta de Faturamento & Ponto de Equilíbrio
+              </h2>
+              <p class="panel-subtitle">Descubra quantas vendas você precisa fazer por dia para bancar sua empresa e bater sua meta de lucro líquido.</p>
+            </div>
+          </div>
+
+          <div class="form-grid-3">
+            <div class="form-field">
+              <label>Custos Fixos Mensais da Empresa</label>
+              <div class="input-addon-group input-addon-left">
+                <span class="addon-left">R$</span>
+                <input type="number" id="goalFixedCosts" value="4500.00" min="0" step="100">
+              </div>
+              <small style="color:var(--text-subtle); font-size:0.73rem;">Aluguel, equipe, ferramentas, contador, internet</small>
+            </div>
+
+            <div class="form-field">
+              <label>Meta de Lucro Líquido no Bolso</label>
+              <div class="input-addon-group input-addon-left">
+                <span class="addon-left">R$</span>
+                <input type="number" id="goalTargetProfit" value="10000.00" min="0" step="500">
+              </div>
+              <small style="color:var(--text-subtle); font-size:0.73rem;">Quanto você quer tirar livre de lucro no mês</small>
+            </div>
+
+            <div class="form-field">
+              <label>Dias de Venda no Mês</label>
+              <div class="input-addon-group">
+                <select id="goalWorkingDays">
+                  <option value="30">30 dias (Marketplace full-time)</option>
+                  <option value="26">26 dias (Segunda a Sábado)</option>
+                  <option value="22">22 dias (Apenas dias úteis)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="goal-kpis" style="margin-top:24px;">
+            <div class="goal-kpi-card">
+              <span style="font-size:0.76rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Ponto de Equilíbrio (Zero a Zero)</span>
+              <div id="goalBreakEvenRevenue" style="font-size:1.5rem; font-weight:800; color:#fbbf24; margin:6px 0 2px;">R$ 0,00</div>
+              <small style="color:var(--text-subtle);">Faturamento mínimo para pagar as contas</small>
+            </div>
+
+            <div class="goal-kpi-card" style="border-color:rgba(16,185,129,0.3); background:rgba(16,185,129,0.06);">
+              <span style="font-size:0.76rem; color:#34d399; font-weight:700; text-transform:uppercase;">Faturamento Alvo da Meta</span>
+              <div id="goalTargetRevenue" style="font-size:1.7rem; font-weight:800; color:#34d399; margin:6px 0 2px;">R$ 0,00</div>
+              <small style="color:var(--text-muted);">Paga os custos e sobra sua meta líquida</small>
+            </div>
+
+            <div class="goal-kpi-card">
+              <span style="font-size:0.76rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Vendas Necessárias no Mês</span>
+              <div id="goalUnitsMonth" style="font-size:1.5rem; font-weight:800; color:#fff; margin:6px 0 2px;">0 unid.</div>
+              <small style="color:var(--text-subtle);">Baseado no produto selecionado</small>
+            </div>
+
+            <div class="goal-kpi-card" style="border-color:rgba(56,189,248,0.3); background:rgba(56,189,248,0.06);">
+              <span style="font-size:0.76rem; color:#38bdf8; font-weight:700; text-transform:uppercase;">Meta de Vendas por Dia</span>
+              <div id="goalUnitsDay" style="font-size:1.7rem; font-weight:800; color:#38bdf8; margin:6px 0 2px;">0 / dia</div>
+              <small style="color:var(--text-muted);">Média diária de pedidos que você precisa</small>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ABA 5: Cotação WhatsApp & Ficha Técnica -->
+      <div class="tab-pane" id="tab-cotacao">
+        <section class="panel-card">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                Gerador de Cotação WhatsApp & Ficha Técnica
+              </h2>
+              <p class="panel-subtitle">Copie uma cotação formatada pronta para enviar ao cliente no WhatsApp com 1 clique.</p>
+            </div>
+            <div style="display:flex; gap:10px;">
+              <button id="btnCopyWhatsApp" class="btn btn-success">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                Copiar para WhatsApp
+              </button>
+              <button onclick="window.print()" class="btn btn-secondary">Imprimir Ficha PDF</button>
+            </div>
+          </div>
+
+          <div class="form-grid-3">
+            <div class="form-field">
+              <label>Nome da Sua Loja / Empresa</label>
+              <div class="input-addon-group">
+                <input type="text" id="quoteStoreName" placeholder="Ex.: Minha Loja Oficial" value="Minha Loja">
+              </div>
+            </div>
+            <div class="form-field">
+              <label>Condição de Pagamento</label>
+              <div class="input-addon-group">
+                <input type="text" id="quotePaymentTerms" value="À vista no Pix ou até 12x no cartão">
+              </div>
+            </div>
+            <div class="form-field">
+              <label>Prazo de Envio / Entrega</label>
+              <div class="input-addon-group">
+                <input type="text" id="quoteShippingTerms" value="Pronta entrega • Envio em até 24h">
+              </div>
+            </div>
+          </div>
+
+          <div class="whatsapp-box">
+            <div style="font-size:0.75rem; color:#8696a0; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+              <span>Prévia da Mensagem Formatada</span>
+            </div>
+            <div class="whatsapp-bubble" id="whatsappPreviewText">
+              <!-- Renderizado via JavaScript -->
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Toast de feedback -->
+      <div id="toast" class="toast-msg">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        <span>Cotação copiada para o WhatsApp!</span>
+      </div>
 
     </div>
   </main>

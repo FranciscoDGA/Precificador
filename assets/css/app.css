@@ -417,13 +417,164 @@
   height: 20px;
 }
 
+/* App Navigation Tabs */
+.app-tabs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+  -webkit-overflow-scrolling: touch;
+}
+
+.tab-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 10px 18px;
+  border-radius: var(--radius-md);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: var(--transition);
+}
+
+.tab-btn:hover {
+  background: var(--bg-card-hover);
+  color: #fff;
+  border-color: var(--text-subtle);
+}
+
+.tab-btn.active {
+  background: rgba(37, 99, 235, 0.15);
+  color: #60a5fa;
+  border-color: #3b82f6;
+  box-shadow: 0 0 15px rgba(37, 99, 235, 0.2);
+}
+
+.tab-pane {
+  display: none;
+}
+
+.tab-pane.active {
+  display: block;
+}
+
+/* Kits & Combos Grid */
+.combo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.combo-card {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.combo-card.featured {
+  border-color: #10b981;
+  background: linear-gradient(180deg, rgba(16, 185, 129, 0.08) 0%, var(--bg-input) 100%);
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.15);
+}
+
+.combo-badge {
+  position: absolute;
+  top: -10px;
+  right: 16px;
+  background: #10b981;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  text-transform: uppercase;
+}
+
+/* Meta & Break-Even */
+.goal-kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.goal-kpi-card {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 18px;
+}
+
+/* WhatsApp Preview */
+.whatsapp-box {
+  background: #0b141a;
+  border: 1px solid #222e35;
+  border-radius: var(--radius-md);
+  padding: 20px;
+  font-family: inherit;
+  color: #e9edef;
+  position: relative;
+  margin-top: 16px;
+}
+
+.whatsapp-bubble {
+  background: #005c4b;
+  border-radius: 12px 12px 0 12px;
+  padding: 16px;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  color: #e9edef;
+}
+
+/* Toast */
+.toast-msg {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  background: #10b981;
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  font-size: 0.9rem;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 2000;
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+.toast-msg.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 /* Print Optimization */
 @media print {
   body {
     background: #fff !important;
     color: #000 !important;
   }
-  .app-header, .bottom-nav, .calc-actions, .app-actions, .no-print {
+  .app-header, .bottom-nav, .calc-actions, .app-actions, .app-tabs, .no-print {
     display: none !important;
   }
   .panel-card {
