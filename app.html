@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Precificador Pro | Simulador & Catálogo Offline</title>
+  <meta name="description" content="Simulador financeiro e precificador profissional para marketplaces. Armazenamento 100% no seu dispositivo.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Estilos -->
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/app.css">
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0b0f19">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body class="app-layout">
+
+  <!-- Header da Aplicação -->
+  <header class="app-header">
+    <div class="container app-header-inner">
+      <div class="app-brand">
+        <a href="index.html" title="Voltar para a página inicial" style="display:flex; align-items:center; gap:10px;">
+          <div class="brand-icon" style="width:30px; height:30px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5">
+              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+          </div>
+          <h1 style="font-size:1.15rem;">Precificador<span style="color:#3b82f6;">Pro</span></h1>
+        </a>
+
+        <span id="appPlanBadge" class="badge badge-warning">PLANO FREE</span>
+
+        <div class="storage-status" title="Seus dados ficam gravados apenas neste celular ou computador">
+          <div class="storage-dot"></div>
+          <span>Dados 100% Locais</span>
+        </div>
+      </div>
+
+      <div class="app-actions">
+        <button id="btnExportCsv" class="btn btn-secondary btn-sm" title="Exportar catálogo em planilha CSV">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+          Exportar CSV
+        </button>
+
+        <button id="btnBackupJson" class="btn btn-secondary btn-sm" title="Fazer backup completo em JSON">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          Backup JSON
+        </button>
+
+        <label for="jsonFileInput" class="btn btn-secondary btn-sm" style="cursor:pointer;" title="Restaurar backup do computador ou celular">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+          Restaurar
+        </label>
+        <input type="file" id="jsonFileInput" accept=".json" style="display:none;">
+
+        <button id="btnPrint" class="btn btn-secondary btn-sm" title="Imprimir relatório / salvar como PDF">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg>
+          PDF
+        </button>
+
+        <button id="btnOpenProModal" class="btn btn-primary btn-sm">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          Ativar Pro
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Conteúdo Principal -->
+  <main class="app-main">
+    <div class="container">
+
+      <!-- Simulador e Resultados -->
+      <section class="dashboard-grid" id="secSimulador">
+        
+        <!-- Formulário de Custos -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+                Simulador de Custos do Produto
+              </h2>
+              <p class="panel-subtitle">Insira os custos diretos e as alíquotas reais do seu modelo fiscal.</p>
+            </div>
+          </div>
+
+          <div class="form-grid-3">
+            <div class="form-field" style="grid-column: span 2;">
+              <label>Nome do Produto <span class="label-hint">Obrigatório</span></label>
+              <div class="input-addon-group">
+                <input type="text" id="productName" placeholder="Ex.: Fone de Ouvido Bluetooth Sem Fio">
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label>SKU / Código <span class="label-hint">Opcional</span></label>
+              <div class="input-addon-group">
+                <input type="text" id="productSku" placeholder="Ex.: FONE-BT-01">
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label>Canal de Venda</label>
+              <div class="input-addon-group">
+                <select id="channelSelect"></select>
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label>Custo do Produto</label>
+              <div class="input-addon-group input-addon-left">
+                <span class="addon-left">R$</span>
+                <input type="number" id="productCost" value="30.00" min="0" step="0.5">
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label>Embalagem & Insumos</label>
+              <div class="input-addon-group input-addon-left">
+                <span class="addon-left">R$</span>
+                <input type="number" id="productPackaging" value="2.50" min="0" step="0.2">
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label>Frete Pago pelo Vendedor</label>
+              <div class="input-addon-group input-addon-left">
+                <span class="addon-left">R$</span>
+                <input type="number" id="productFreight" value="0.00" min="0" step="0.5">
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label>Outros Custos Variáveis</label>
+              <div class="input-addon-group input-addon-left">
+                <span class="addon-left">R$</span>
+                <input type="number" id="productOther" value="0.00" min="0" step="0.5">
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label>Custo Fixo Rateado</label>
+              <div class="input-addon-group input-addon-left">
+                <span class="addon-left">R$</span>
+                <input type="number" id="productFixed" value="3.00" min="0" step="0.5">
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label>Imposto sobre Venda (DAS)</label>
+              <div class="input-addon-group input-addon-right">
+                <input type="number" id="productTax" value="6.00" min="0" max="100" step="0.1">
+                <span class="addon-right">%</span>
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label>Perdas & Devoluções</label>
+              <div class="input-addon-group input-addon-right">
+                <input type="number" id="productLoss" value="2.00" min="0" max="100" step="0.1">
+                <span class="addon-right">%</span>
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label>Ads / Tráfego (ACOS)</label>
+              <div class="input-addon-group input-addon-right">
+                <input type="number" id="productAds" value="0.00" min="0" max="100" step="0.1">
+                <span class="addon-right">%</span>
+              </div>
+            </div>
+
+            <div class="form-field" style="grid-column: span 3;">
+              <label>Margem Líquida Pretendida <span class="label-hint">Sobre o valor final da venda</span></label>
+              <div class="input-addon-group input-addon-right">
+                <input type="number" id="targetMargin" value="15.00" min="0" max="99" step="0.5">
+                <span class="addon-right">%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Metadados do Canal Selecionado -->
+          <div class="channel-meta-box">
+            <div class="channel-meta-item">
+              <span>Comissão do Canal</span>
+              <strong id="readoutCommission">0,00%</strong>
+            </div>
+            <div class="channel-meta-item">
+              <span>Taxa Fixa por Item</span>
+              <strong id="readoutFixedFee">R$ 0,00</strong>
+            </div>
+            <div class="channel-meta-item">
+              <span>Taxa de Gateway/Cartão</span>
+              <strong id="readoutPayment">0,00%</strong>
+            </div>
+          </div>
+          <small id="channelNoteText" style="color:var(--text-muted); display:block; margin-top:-6px; margin-bottom:18px; font-size:0.78rem;"></small>
+
+          <div class="calc-actions" style="display:flex; gap:12px; flex-wrap:wrap;">
+            <button id="btnAddProduct" class="btn btn-success">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Salvar no Catálogo Local
+            </button>
+            <button id="btnClearForm" class="btn btn-secondary">Limpar Campos</button>
+          </div>
+        </div>
+
+        <!-- Painel de Resultados -->
+        <div class="panel-card" style="display:flex; flex-direction:column; justify-content:space-between;">
+          <div>
+            <div class="panel-header">
+              <div>
+                <h2 class="panel-title">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                  Resultado da Precificação
+                </h2>
+                <p class="panel-subtitle">Matemática reversa baseada na margem líquida líquida.</p>
+              </div>
+              <span id="resStatus" class="status-pill ok">OK</span>
+            </div>
+
+            <div class="results-box">
+              <div class="result-card">
+                <div class="res-label">Custo Base Total</div>
+                <div class="res-value" id="resBaseCost">R$ 0,00</div>
+                <div class="res-sub">Produto + frete + fixo + taxa fixa</div>
+              </div>
+
+              <div class="result-card">
+                <div class="res-label">Taxas Percentuais Totais</div>
+                <div class="res-value" id="resPercentFees">0,00%</div>
+                <div class="res-sub">Comissão + imposto + devoluções + Ads</div>
+              </div>
+
+              <div class="result-card">
+                <div class="res-label">Preço Mínimo (Break-Even)</div>
+                <div class="res-value" id="resMinPrice">R$ 0,00</div>
+                <div class="res-sub">Ponto de equilíbrio (Zero a Zero)</div>
+              </div>
+
+              <div class="result-card highlight">
+                <div class="res-label">Preço Ideal de Venda</div>
+                <div class="res-value" id="resIdealPrice">R$ 0,00</div>
+                <div class="res-sub">Com a margem líquida desejada</div>
+              </div>
+
+              <div class="result-card highlight">
+                <div class="res-label">Lucro Líquido no Bolso</div>
+                <div class="res-value" id="resProfit">R$ 0,00</div>
+                <div class="res-sub">Valor líquido por unidade vendida</div>
+              </div>
+
+              <div class="result-card">
+                <div class="res-label">Margem Real sobre a Venda</div>
+                <div class="res-value" id="resMargin">0,00%</div>
+                <div class="res-sub">Lucro dividido pelo preço ideal</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="background:rgba(37,99,235,0.06); border:1px solid rgba(37,99,235,0.15); border-radius:var(--radius-md); padding:14px; margin-top:16px;">
+            <strong style="color:#60a5fa; font-size:0.82rem; display:block; margin-bottom:4px;">Análise Financeira:</strong>
+            <p id="resExplanation" style="color:var(--text-muted); font-size:0.84rem; margin:0; line-height:1.5;">
+              Preencha os campos para visualizar a recomendação do algoritmo.
+            </p>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Catálogo de Produtos Salvos -->
+      <section class="panel-card" style="margin-bottom:24px;" id="secCatalogo">
+        <div class="panel-header">
+          <div>
+            <h2 class="panel-title">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+              Catálogo de Produtos Salvos (Lote)
+            </h2>
+            <p class="panel-subtitle">Todos os itens salvos neste dispositivo móvel ou computador.</p>
+          </div>
+          <div>
+            <button id="btnClearAllItems" class="btn btn-danger btn-sm">Limpar Catálogo</button>
+          </div>
+        </div>
+
+        <!-- Métricas Rápidas -->
+        <div class="metrics-row">
+          <div class="metric-stat">
+            <span>Produtos Cadastrados</span>
+            <strong id="statCount">0</strong>
+          </div>
+          <div class="metric-stat">
+            <span>Preço Médio Ideal</span>
+            <strong id="statAvgPrice">R$ 0,00</strong>
+          </div>
+          <div class="metric-stat">
+            <span>Lucro Projetado por Lote</span>
+            <strong id="statTotalProfit" style="color:#34d399;">R$ 0,00</strong>
+          </div>
+          <div class="metric-stat">
+            <span>Produtos com Margem de Risco</span>
+            <strong id="statAlerts" style="color:#f87171;">0</strong>
+          </div>
+        </div>
+
+        <!-- Tabela Responsiva de Produtos -->
+        <div class="table-container">
+          <table class="app-table">
+            <thead>
+              <tr>
+                <th>Produto / SKU</th>
+                <th>Canal</th>
+                <th class="num">Custo Base</th>
+                <th class="num">Preço Mínimo</th>
+                <th class="num">Preço Ideal</th>
+                <th class="num">Lucro Unitário</th>
+                <th class="num">Margem</th>
+                <th>Status</th>
+                <th class="actions">Ação</th>
+              </tr>
+            </thead>
+            <tbody id="productsTableBody">
+              <!-- Renderizado dinamicamente pelo JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Configuração de Taxas dos Marketplaces -->
+      <section class="panel-card" id="secTaxas">
+        <div class="panel-header">
+          <div>
+            <h2 class="panel-title">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+              Configuração de Taxas dos Marketplaces
+            </h2>
+            <p class="panel-subtitle">Ajuste as comissões e taxas fixas de acordo com sua categoria e contrato.</p>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table class="app-table">
+            <thead>
+              <tr>
+                <th>Marketplace / Canal</th>
+                <th class="num">Comissão %</th>
+                <th class="num">Taxa Fixa (R$)</th>
+                <th class="num">Pagamento/Cartão %</th>
+                <th>Observações & Regras</th>
+              </tr>
+            </thead>
+            <tbody id="channelsTableBody">
+              <!-- Renderizado dinamicamente pelo JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Barra de Navegação Inferior para Smartphones -->
+  <nav class="bottom-nav">
+    <a href="#secSimulador" class="bottom-nav-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+      <span>Simulador</span>
+    </a>
+    <a href="#secCatalogo" class="bottom-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      <span>Catálogo</span>
+    </a>
+    <a href="#secTaxas" class="bottom-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+      <span>Taxas</span>
+    </a>
+    <a href="#" id="btnBottomPro" class="bottom-nav-item" onclick="document.getElementById('btnOpenProModal').click(); return false;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      <span>Ativar Pro</span>
+    </a>
+  </nav>
+
+  <!-- Modal de Ativação Hotmart / Licença Pro -->
+  <div class="modal-backdrop" id="proModal">
+    <div class="modal-box">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+        <span class="badge badge-pro">Ativação Hotmart</span>
+        <button id="btnCloseProModal" style="background:transparent; border:none; color:var(--text-muted); cursor:pointer; font-size:1.2rem;">&times;</button>
+      </div>
+
+      <h3 style="font-size:1.3rem; margin-bottom:8px; color:#fff;">Desbloqueie o Precificador Pro</h3>
+      <p id="proModalMessage" style="color:var(--text-muted); font-size:0.88rem; line-height:1.5; margin-bottom:20px;">
+        Insira o código de transação fornecido pela Hotmart após a sua compra para liberar produtos ilimitados e todos os recursos no seu aparelho.
+      </p>
+
+      <div class="form-field" style="margin-bottom:16px;">
+        <label>Código da Transação Hotmart (ex: HP1234567890)</label>
+        <div class="input-addon-group">
+          <input type="text" id="licenseKeyInput" placeholder="HP..." style="text-transform:uppercase; font-family:monospace; font-size:1rem; letter-spacing:0.05em;">
+        </div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <button id="btnSubmitLicense" class="btn btn-primary" style="width:100%;">
+          Validar e Ativar Licença Pro
+        </button>
+        <a href="https://pay.hotmart.com/YOUR_HOTMART_CODE?checkoutMode=10" target="_blank" class="btn btn-secondary" style="width:100%; text-align:center;">
+          Ainda não comprou? Adquira na Hotmart
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="assets/js/app.js"></script>
+
+  <!-- Registro de Service Worker para funcionamento 100% Offline (PWA) -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js')
+          .then(reg => console.log('Precificador Pro PWA ativo:', reg.scope))
+          .catch(err => console.log('Service Worker não registrado:', err));
+      });
+    }
+  </script>
+</body>
+</html>

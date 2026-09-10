@@ -1,0 +1,25 @@
+{
+  "name": "precificador-pro",
+  "version": "2.1.0",
+  "description": "Calculadora e simulador financeiro profissional para marketplaces - PWA e APK",
+  "private": true,
+  "scripts": {
+    "start": "npx serve .",
+    "cap:init": "npx cap init \"Precificador Pro\" \"com.precificadorpro.app\" --web-dir .",
+    "cap:add:android": "npx cap add android",
+    "cap:sync": "npx cap sync",
+    "cap:open:android": "npx cap open android"
+  },
+  "keywords": [
+    "precificador",
+    "marketplaces",
+    "mercadolivre",
+    "amazon",
+    "shopee",
+    "shein",
+    "pwa",
+    "hotmart"
+  ],
+  "author": "Precificador Pro",
+  "license": "UNLICENSED"
+}

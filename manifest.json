@@ -1,0 +1,40 @@
+{
+  "name": "Precificador Pro - Marketplaces",
+  "short_name": "PrecificadorPro",
+  "description": "Calculadora financeira e simulador de preços 100% offline para Mercado Livre, Amazon, Shopee e Shein.",
+  "start_url": "./app.html",
+  "display": "standalone",
+  "background_color": "#0b0f19",
+  "theme_color": "#0b0f19",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Novo Cálculo",
+      "short_name": "Simulador",
+      "description": "Calcular preço de um novo produto",
+      "url": "./app.html#secSimulador",
+      "icons": [{ "src": "assets/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Meus Produtos",
+      "short_name": "Catálogo",
+      "description": "Ver lista de produtos salvos",
+      "url": "./app.html#secCatalogo",
+      "icons": [{ "src": "assets/icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
