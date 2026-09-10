@@ -37,6 +37,7 @@
         </a>
 
         <span id="appPlanBadge" class="badge badge-warning">PLANO FREE</span>
+        <span class="badge badge-pro" style="background:linear-gradient(135deg, #10b981, #059669);">v3.5 COMPLETO</span>
 
         <div class="storage-status" title="Seus dados ficam gravados apenas neste celular ou computador">
           <div class="storage-dot"></div>
@@ -611,22 +612,26 @@
 
   <!-- Barra de Navegação Inferior para Smartphones -->
   <nav class="bottom-nav">
-    <a href="#secSimulador" class="bottom-nav-item active">
+    <button class="bottom-nav-item active tab-btn" data-tab="tab-simulador" style="background:transparent; border:none;">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
       <span>Simulador</span>
-    </a>
-    <a href="#secCatalogo" class="bottom-nav-item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-      <span>Catálogo</span>
-    </a>
-    <a href="#secTaxas" class="bottom-nav-item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
-      <span>Taxas</span>
-    </a>
-    <a href="#" id="btnBottomPro" class="bottom-nav-item" onclick="document.getElementById('btnOpenProModal').click(); return false;">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-      <span>Ativar Pro</span>
-    </a>
+    </button>
+    <button class="bottom-nav-item tab-btn" data-tab="tab-comparador" style="background:transparent; border:none;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+      <span>Comparar</span>
+    </button>
+    <button class="bottom-nav-item tab-btn" data-tab="tab-kits" style="background:transparent; border:none;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/></svg>
+      <span>Kits</span>
+    </button>
+    <button class="bottom-nav-item tab-btn" data-tab="tab-metas" style="background:transparent; border:none;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/></svg>
+      <span>Metas</span>
+    </button>
+    <button class="bottom-nav-item tab-btn" data-tab="tab-cotacao" style="background:transparent; border:none;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <span>WhatsApp</span>
+    </button>
   </nav>
 
   <!-- Modal de Ativação Hotmart / Licença Pro -->
@@ -661,14 +666,17 @@
   </div>
 
   <!-- Scripts -->
-  <script src="assets/js/app.js"></script>
+  <script src="assets/js/app.js?v=4.0"></script>
 
   <!-- Registro de Service Worker para funcionamento 100% Offline (PWA) -->
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js')
-          .then(reg => console.log('Precificador Pro PWA ativo:', reg.scope))
+        navigator.serviceWorker.register('sw.js?v=4.0')
+          .then(reg => {
+            reg.update();
+            console.log('Precificador Pro PWA ativo:', reg.scope);
+          })
           .catch(err => console.log('Service Worker não registrado:', err));
       });
     }
