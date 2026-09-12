@@ -108,6 +108,10 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
           5. Cotação WhatsApp / PDF
         </button>
+        <button class="tab-btn" data-tab="tab-reversa">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><path d="M11 8v6"/><path d="M8 11h6"/></svg>
+          6. Espião / Preço Alvo
+        </button>
       </nav>
 
       <!-- ABA 1: Simulador Unitário, Catálogo & Taxas -->
@@ -330,9 +334,76 @@
                 <div class="res-sub">Lucro dividido pelo preço ideal</div>
               </div>
             </div>
+
+            <!-- INOVAÇÃO 1: Raio-X da Partilha do Preço de Venda -->
+            <div class="partilha-container" style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 14px 16px; margin-top: 14px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
+                <strong style="color: #fff; font-size: 0.84rem; display:flex; align-items:center; gap:6px;">
+                  🩻 Raio-X da Partilha do Preço
+                </strong>
+                <span style="font-size: 0.74rem; color: var(--text-subtle);">Divisão real de cada R$ 100 vendidos</span>
+              </div>
+              
+              <div class="partilha-bar" style="height: 12px; width: 100%; border-radius: 6px; overflow: hidden; display: flex; background: #334155; margin-bottom: 10px;">
+                <div id="barCost" style="width: 40%; background: #3b82f6;" title="Fornecedor & Insumos"></div>
+                <div id="barChannel" style="width: 25%; background: #f59e0b;" title="Taxas Marketplace"></div>
+                <div id="barTax" style="width: 10%; background: #ef4444;" title="Impostos & Custos"></div>
+                <div id="barProfit" style="width: 25%; background: #10b981;" title="Lucro Líquido no Bolso"></div>
+              </div>
+
+              <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; font-size: 0.76rem;">
+                <div style="display:flex; align-items:center; gap:6px;">
+                  <span style="width:8px; height:8px; border-radius:50%; background:#3b82f6; flex-shrink:0;"></span>
+                  <span style="color:var(--text-muted);">Fornecedor/Insumos:</span>
+                  <strong id="partilhaCost" style="color:#fff; margin-left:auto;">0%</strong>
+                </div>
+                <div style="display:flex; align-items:center; gap:6px;">
+                  <span style="width:8px; height:8px; border-radius:50%; background:#f59e0b; flex-shrink:0;"></span>
+                  <span style="color:var(--text-muted);">Marketplace:</span>
+                  <strong id="partilhaChannel" style="color:#fff; margin-left:auto;">0%</strong>
+                </div>
+                <div style="display:flex; align-items:center; gap:6px;">
+                  <span style="width:8px; height:8px; border-radius:50%; background:#ef4444; flex-shrink:0;"></span>
+                  <span style="color:var(--text-muted);">Impostos/Custos:</span>
+                  <strong id="partilhaTax" style="color:#fff; margin-left:auto;">0%</strong>
+                </div>
+                <div style="display:flex; align-items:center; gap:6px;">
+                  <span style="width:8px; height:8px; border-radius:50%; background:#10b981; flex-shrink:0;"></span>
+                  <span style="color:var(--text-muted);">Seu Bolso Líquido:</span>
+                  <strong id="partilhaProfit" style="color:#34d399; margin-left:auto;">0%</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- INOVAÇÃO 2: Alerta Inteligente da Faixa Crítica dos R$ 79 do Mercado Livre -->
+            <div id="mlZoneCard" style="display:none; border-radius: var(--radius-md); padding: 12px 14px; margin-top: 12px; border: 1px solid; font-size: 0.82rem; line-height: 1.45;">
+              <!-- Atualizado dinamicamente pelo JavaScript -->
+            </div>
+
+            <!-- INOVAÇÃO 3: Teste de Desconto Seguro & Oferta Relâmpago -->
+            <div style="background: rgba(16, 185, 129, 0.06); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: var(--radius-md); padding: 12px 14px; margin-top: 12px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 6px;">
+                <strong style="color: #34d399; font-size: 0.82rem; display:flex; align-items:center; gap:6px;">
+                  🏷️ Teste de Promoção & Desconto Seguro
+                </strong>
+                <span id="resMaxDiscountTag" class="badge" style="background:#065f46; color:#34d399; font-size:0.72rem;">Máx: 0%</span>
+              </div>
+              <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 8px;">
+                Desconto máximo para não ter prejuízo: <strong id="resMaxDiscountVal" style="color:#fff;">R$ 0,00</strong> (<span id="resMaxDiscountPct">0%</span>).
+              </p>
+              <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                <span style="font-size: 0.76rem; color: var(--text-subtle); white-space: nowrap;">Simular Cupom:</span>
+                <input type="number" id="promoDiscountInput" value="5" min="0" max="90" step="1" style="width: 55px; padding: 3px 6px; background: var(--bg-input); border: 1px solid var(--border); color:#fff; border-radius: var(--radius-sm); font-size: 0.8rem; text-align: right;">
+                <span style="color: var(--text-muted); font-size: 0.78rem;">%</span>
+                <span style="margin-left: auto; font-size: 0.78rem; color: var(--text-muted);">
+                  Lucro c/ Cupom: <strong id="promoSimProfit" style="color:#34d399;">R$ 0,00</strong>
+                </span>
+              </div>
+            </div>
+
           </div>
 
-          <div style="background:rgba(37,99,235,0.06); border:1px solid rgba(37,99,235,0.15); border-radius:var(--radius-md); padding:14px; margin-top:16px;">
+          <div style="background:rgba(37,99,235,0.06); border:1px solid rgba(37,99,235,0.15); border-radius:var(--radius-md); padding:14px; margin-top:14px;">
             <strong style="color:#60a5fa; font-size:0.82rem; display:block; margin-bottom:4px;">Análise Financeira:</strong>
             <p id="resExplanation" style="color:var(--text-muted); font-size:0.84rem; margin:0; line-height:1.5;">
               Preencha os campos para visualizar a recomendação do algoritmo.
@@ -641,6 +712,120 @@
         </section>
       </div>
 
+      <!-- ABA 6: Espião / Engenharia Reversa de Concorrente -->
+      <div class="tab-pane" id="tab-reversa">
+        <section class="dashboard-grid">
+          <div class="panel-card">
+            <div class="panel-header">
+              <div>
+                <h2 class="panel-title">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><path d="M11 8v6"/><path d="M8 11h6"/></svg>
+                  Engenharia Reversa de Preço Alvo
+                </h2>
+                <p class="panel-subtitle">Descubra o teto máximo de custo no fornecedor para bater o preço do concorrente com lucro.</p>
+              </div>
+            </div>
+
+            <div class="form-grid-3">
+              <div class="form-field" style="grid-column: span 2;">
+                <label>Preço Praticado pelo Concorrente</label>
+                <div class="input-addon-group input-addon-left">
+                  <span class="addon-left">R$</span>
+                  <input type="number" id="revCompPrice" value="59.90" min="1" step="0.5">
+                </div>
+              </div>
+
+              <div class="form-field">
+                <label>Canal de Venda</label>
+                <div class="input-addon-group">
+                  <select id="revChannelSelect"></select>
+                </div>
+              </div>
+
+              <div class="form-field">
+                <label>Margem Líquida Exigida no Bolso</label>
+                <div class="input-addon-group input-addon-right">
+                  <input type="number" id="revTargetMargin" value="20.00" min="1" max="80" step="0.5">
+                  <span class="addon-right">%</span>
+                </div>
+              </div>
+
+              <div class="form-field">
+                <label>Imposto DAS / Simples</label>
+                <div class="input-addon-group input-addon-right">
+                  <input type="number" id="revTax" value="6.00" min="0" max="100" step="0.5">
+                  <span class="addon-right">%</span>
+                </div>
+              </div>
+
+              <div class="form-field">
+                <label>Insumos + Embalagem + Fixo</label>
+                <div class="input-addon-group input-addon-left">
+                  <span class="addon-left">R$</span>
+                  <input type="number" id="revPackaging" value="2.50" min="0" step="0.5">
+                </div>
+              </div>
+            </div>
+
+            <div style="background:rgba(139,92,246,0.08); border:1px solid rgba(139,92,246,0.25); border-radius:var(--radius-md); padding:14px; margin-top:16px;">
+              <small style="color:#c4b5fd; font-weight:600; display:block; margin-bottom:4px;">Como funciona a Engenharia Reversa:</small>
+              <p style="color:var(--text-muted); font-size:0.83rem; margin:0; line-height:1.5;">
+                O algoritmo desconta as comissões do canal, taxas fixas, DAS e o seu lucro desejado direto do preço do concorrente. O que sobrar é o valor limite absoluto para negociar com seu fornecedor.
+              </p>
+            </div>
+          </div>
+
+          <!-- Resultado da Engenharia Reversa -->
+          <div class="panel-card" style="display:flex; flex-direction:column; justify-content:space-between;">
+            <div>
+              <div class="panel-header">
+                <div>
+                  <h2 class="panel-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    Veredito de Compra
+                  </h2>
+                  <p class="panel-subtitle">Teto seguro de negociação com fornecedores.</p>
+                </div>
+                <span id="revStatusBadge" class="status-pill ok">VIÁVEL</span>
+              </div>
+
+              <div class="results-box">
+                <div class="result-card highlight" style="grid-column: span 2; background: rgba(139, 92, 246, 0.12); border-color: rgba(139, 92, 246, 0.4);">
+                  <div class="res-label" style="color:#c4b5fd;">TETO MÁXIMO DE COMPRA NO FORNECEDOR</div>
+                  <div class="res-value" id="revMaxCost" style="color:#fff; font-size:1.8rem;">R$ 0,00</div>
+                  <div class="res-sub">Se o fornecedor cobrar mais caro que isso, não compre!</div>
+                </div>
+
+                <div class="result-card">
+                  <div class="res-label">Seu Lucro Líquido Esperado</div>
+                  <div class="res-value" id="revExpectedProfit" style="color:#34d399;">R$ 0,00</div>
+                  <div class="res-sub" id="revExpectedMargin">20% da venda</div>
+                </div>
+
+                <div class="result-card">
+                  <div class="res-label">Taxas Retidas pelo Canal</div>
+                  <div class="res-value" id="revChannelFees">R$ 0,00</div>
+                  <div class="res-sub">Comissão + Taxa Fixa</div>
+                </div>
+
+                <div class="result-card" style="grid-column: span 2;">
+                  <div class="res-label">Imposto (DAS) + Insumos</div>
+                  <div class="res-value" id="revTaxAndFixed">R$ 0,00</div>
+                  <div class="res-sub">Governo e operacional</div>
+                </div>
+              </div>
+            </div>
+
+            <div id="revVerdictBox" style="background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.25); border-radius:var(--radius-md); padding:14px; margin-top:16px;">
+              <strong id="revVerdictTitle" style="color:#34d399; font-size:0.88rem; display:block; margin-bottom:4px;">✅ Decisão do Algoritmo:</strong>
+              <p id="revVerdictText" style="color:var(--text-muted); font-size:0.84rem; margin:0; line-height:1.5;">
+                Analisando viabilidade do produto...
+              </p>
+            </div>
+          </div>
+        </section>
+      </div>
+
       <!-- Toast de feedback -->
       <div id="toast" class="toast-msg">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
@@ -671,6 +856,10 @@
     <button class="bottom-nav-item tab-btn" data-tab="tab-cotacao" style="background:transparent; border:none;">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
       <span>WhatsApp</span>
+    </button>
+    <button class="bottom-nav-item tab-btn" data-tab="tab-reversa" style="background:transparent; border:none;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><path d="M11 8v6"/><path d="M8 11h6"/></svg>
+      <span>Espião</span>
     </button>
   </nav>
 

@@ -198,6 +198,18 @@
       select.value = channelNames[0] || 'Mercado Livre';
     }
     updateChannelReadout();
+
+    // Popula também o select de Engenharia Reversa (Aba 6)
+    const revSelect = document.getElementById('revChannelSelect');
+    if (revSelect) {
+      const curRev = revSelect.value;
+      revSelect.innerHTML = channelNames.map(name => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`).join('');
+      if (channelNames.includes(curRev)) {
+        revSelect.value = curRev;
+      } else {
+        revSelect.value = channelNames[0] || 'Mercado Livre';
+      }
+    }
   }
 
   function updateChannelReadout() {
@@ -352,6 +364,111 @@
       } else {
         const markupTxt = result.markup ? `${result.markup.toLocaleString('pt-BR', { maximumFractionDigits: 2 })}x` : '—';
         elNote.textContent = `Preço ideal garante lucro líquido de ${money(result.profit)} com Markup multiplicador de ${markupTxt} sobre o custo direto.`;
+      }
+    }
+
+    // INOVAÇÃO 1: Raio-X da Partilha do Preço de Venda
+    if (result.idealPrice && result.idealPrice > 0) {
+      const rev = result.idealPrice;
+      const supplierCost = (result.cost || 0) + (result.packaging || 0) + (result.freight || 0);
+      const channelFees = (rev * (result.commission || 0)) + (result.fixedFee || 0) + (rev * (result.payment || 0));
+      const taxesAndOther = (rev * ((result.tax || 0) + (result.loss || 0) + (result.ads || 0))) + (result.fixed || 0);
+      const pocketProfit = Math.max(0, result.profit || 0);
+
+      const pCost = Math.max(0, Math.min(100, (supplierCost / rev) * 100));
+      const pChannel = Math.max(0, Math.min(100, (channelFees / rev) * 100));
+      const pTax = Math.max(0, Math.min(100, (taxesAndOther / rev) * 100));
+      const pProfit = Math.max(0, Math.min(100, (pocketProfit / rev) * 100));
+
+      const barC = document.getElementById('barCost');
+      const barCh = document.getElementById('barChannel');
+      const barT = document.getElementById('barTax');
+      const barP = document.getElementById('barProfit');
+
+      if (barC) barC.style.width = `${pCost}%`;
+      if (barCh) barCh.style.width = `${pChannel}%`;
+      if (barT) barT.style.width = `${pTax}%`;
+      if (barP) barP.style.width = `${pProfit}%`;
+
+      const txtC = document.getElementById('partilhaCost');
+      const txtCh = document.getElementById('partilhaChannel');
+      const txtT = document.getElementById('partilhaTax');
+      const txtP = document.getElementById('partilhaProfit');
+
+      if (txtC) txtC.textContent = `${pct(pCost)} (${money(supplierCost)})`;
+      if (txtCh) txtCh.textContent = `${pct(pChannel)} (${money(channelFees)})`;
+      if (txtT) txtT.textContent = `${pct(pTax)} (${money(taxesAndOther)})`;
+      if (txtP) txtP.textContent = `${pct(pProfit)} (${money(pocketProfit)})`;
+    }
+
+    // INOVAÇÃO 2: Alerta Inteligente da Faixa Crítica dos R$ 79 do Mercado Livre
+    const mlZone = document.getElementById('mlZoneCard');
+    if (mlZone) {
+      const curChannel = document.getElementById('channelSelect')?.value || '';
+      if (curChannel.includes('Mercado Livre') && result.idealPrice) {
+        mlZone.style.display = 'block';
+        if (result.idealPrice >= 79 && result.idealPrice <= 95) {
+          mlZone.style.background = 'rgba(245, 158, 11, 0.12)';
+          mlZone.style.borderColor = 'rgba(245, 158, 11, 0.4)';
+          mlZone.style.color = '#fef3c7';
+          mlZone.innerHTML = `
+            <div style="font-weight:700; color:#fbbf24; margin-bottom:4px; display:flex; align-items:center; gap:6px;">
+              ⚠️ ZONA DA MORTE DO MERCADO LIVRE (R$ 79 a R$ 95)
+            </div>
+            O Mercado Livre impõe <strong>Frete Grátis obrigatório (cerca de R$ 20,00)</strong> para vendas a partir de R$ 79,00.<br>
+            Vender a <strong>${money(result.idealPrice)}</strong> deixará <strong>MENOS dinheiro no seu bolso</strong> do que vender a <strong>R$ 78,90</strong>!<br>
+            💡 <strong>Recomendação:</strong> Venda a <strong>R$ 78,90</strong> (sem frete obrigatório) OU suba o preço para <strong>${money(result.idealPrice + 16)}</strong> para absorver o frete com lucro.
+          `;
+        } else if (result.idealPrice < 79) {
+          mlZone.style.background = 'rgba(16, 185, 129, 0.1)';
+          mlZone.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+          mlZone.style.color = '#d1fae5';
+          mlZone.innerHTML = `
+            <div style="font-weight:700; color:#34d399; margin-bottom:2px;">
+              ✅ FAIXA ECONÔMICA (Abaixo de R$ 79,00)
+            </div>
+            Frete 100% pago pelo comprador. Você não sofre retenção de frete grátis obrigatório no Mercado Livre.
+          `;
+        } else {
+          mlZone.style.background = 'rgba(59, 130, 246, 0.1)';
+          mlZone.style.borderColor = 'rgba(59, 130, 246, 0.25)';
+          mlZone.style.color = '#e0f2fe';
+          mlZone.innerHTML = `
+            <div style="font-weight:700; color:#60a5fa; margin-bottom:2px;">
+              📦 Frete Grátis Diluído no Ticket
+            </div>
+            Como seu preço (${money(result.idealPrice)}) está bem acima de R$ 79, certifique-se de preencher o frete no campo "Frete Pago pelo Vendedor" para que ele seja computado na margem.
+          `;
+        }
+      } else {
+        mlZone.style.display = 'none';
+      }
+    }
+
+    // INOVAÇÃO 3: Teste de Desconto Seguro & Oferta Relâmpago
+    const elMaxDiscVal = document.getElementById('resMaxDiscountVal');
+    const elMaxDiscPct = document.getElementById('resMaxDiscountPct');
+    const elMaxDiscTag = document.getElementById('resMaxDiscountTag');
+    const promoInput = document.getElementById('promoDiscountInput');
+    const elPromoProfit = document.getElementById('promoSimProfit');
+
+    if (result.idealPrice && result.idealPrice > 0 && result.minimumPrice !== null) {
+      const maxDiscountVal = Math.max(0, result.idealPrice - result.minimumPrice);
+      const maxDiscountPct = (maxDiscountVal / result.idealPrice) * 100;
+
+      if (elMaxDiscVal) elMaxDiscVal.textContent = money(maxDiscountVal);
+      if (elMaxDiscPct) elMaxDiscPct.textContent = pct(maxDiscountPct);
+      if (elMaxDiscTag) elMaxDiscTag.textContent = `Máx: ${pct(maxDiscountPct)}`;
+
+      const userPromoDisc = (parseFloat(promoInput?.value) || 5) / 100;
+      const promoPrice = result.idealPrice * (1 - userPromoDisc);
+      const supplierCost = (result.cost || 0) + (result.packaging || 0) + (result.freight || 0);
+      const promoFees = (promoPrice * ((result.commission || 0) + (result.payment || 0) + (result.tax || 0) + (result.loss || 0) + (result.ads || 0))) + (result.fixedFee || 0) + (result.fixed || 0);
+      const simProfit = promoPrice - supplierCost - promoFees;
+
+      if (elPromoProfit) {
+        elPromoProfit.textContent = money(simProfit);
+        elPromoProfit.style.color = simProfit > 0 ? '#34d399' : '#f87171';
       }
     }
   }
@@ -662,6 +779,7 @@
         if (targetId === 'tab-kits') renderCombos();
         if (targetId === 'tab-metas') renderGoals();
         if (targetId === 'tab-cotacao') renderWhatsAppPreview();
+        if (targetId === 'tab-reversa') renderReverseEngineering();
       });
     });
   }
@@ -881,6 +999,76 @@ Ficou com alguma dúvida ou deseja que eu já separe o seu pedido? 😊`;
     });
   }
 
+  // INOVAÇÃO 4: Engenharia Reversa do Concorrente (Preço Alvo)
+  function renderReverseEngineering() {
+    const compPrice = parseFloat(document.getElementById('revCompPrice')?.value) || 0;
+    const channelName = document.getElementById('revChannelSelect')?.value || 'Mercado Livre';
+    const targetMargin = (parseFloat(document.getElementById('revTargetMargin')?.value) || 20) / 100;
+    const tax = (parseFloat(document.getElementById('revTax')?.value) || 6) / 100;
+    const packaging = parseFloat(document.getElementById('revPackaging')?.value) || 0;
+
+    const channel = state.channels[channelName] || DEFAULT_CHANNELS[channelName] || { commission: 16, fixedFee: 6, payment: 0 };
+    const commissionRate = (channel.commission || 0) / 100;
+    const paymentRate = (channel.payment || 0) / 100;
+    const fixedFee = channel.fixedFee || 0;
+
+    // Cálculo Reverso:
+    const expectedProfit = compPrice * targetMargin;
+    const channelFees = (compPrice * (commissionRate + paymentRate)) + fixedFee;
+    const taxAndPackaging = (compPrice * tax) + packaging;
+    const maxSupplierCost = compPrice - expectedProfit - channelFees - taxAndPackaging;
+
+    const elMaxCost = document.getElementById('revMaxCost');
+    const elExpProfit = document.getElementById('revExpectedProfit');
+    const elExpMargin = document.getElementById('revExpectedMargin');
+    const elChanFees = document.getElementById('revChannelFees');
+    const elTaxFixed = document.getElementById('revTaxAndFixed');
+    const elStatusBadge = document.getElementById('revStatusBadge');
+    const elVerdictBox = document.getElementById('revVerdictBox');
+    const elVerdictTitle = document.getElementById('revVerdictTitle');
+    const elVerdictText = document.getElementById('revVerdictText');
+
+    if (elMaxCost) elMaxCost.textContent = money(maxSupplierCost);
+    if (elExpProfit) elExpProfit.textContent = money(expectedProfit);
+    if (elExpMargin) elExpMargin.textContent = `${pct(targetMargin * 100)} do valor da venda`;
+    if (elChanFees) elChanFees.textContent = money(channelFees);
+    if (elTaxFixed) elTaxFixed.textContent = money(taxAndPackaging);
+
+    if (maxSupplierCost > 0) {
+      if (elStatusBadge) {
+        elStatusBadge.textContent = 'PRODUTO VIÁVEL';
+        elStatusBadge.className = 'status-pill ok';
+      }
+      if (elVerdictBox) {
+        elVerdictBox.style.background = 'rgba(16, 185, 129, 0.08)';
+        elVerdictBox.style.borderColor = 'rgba(16, 185, 129, 0.25)';
+      }
+      if (elVerdictTitle) {
+        elVerdictTitle.style.color = '#34d399';
+        elVerdictTitle.textContent = '✅ PRODUTO VIÁVEL COM MARGEM PROTEGIDA:';
+      }
+      if (elVerdictText) {
+        elVerdictText.innerHTML = `Você pode pagar até <strong>${money(maxSupplierCost)}</strong> no fornecedor para vender a <strong>${money(compPrice)}</strong> e ainda garantir <strong>${money(expectedProfit)}</strong> líquido no bolso por cada venda.`;
+      }
+    } else {
+      if (elStatusBadge) {
+        elStatusBadge.textContent = 'PREÇO INVIÁVEL';
+        elStatusBadge.className = 'status-pill bad';
+      }
+      if (elVerdictBox) {
+        elVerdictBox.style.background = 'rgba(239, 68, 68, 0.08)';
+        elVerdictBox.style.borderColor = 'rgba(239, 68, 68, 0.25)';
+      }
+      if (elVerdictTitle) {
+        elVerdictTitle.style.color = '#f87171';
+        elVerdictTitle.textContent = '🛑 ALERTA DE PREJUÍZO (TAXAS MAIORES QUE A MARGEM):';
+      }
+      if (elVerdictText) {
+        elVerdictText.innerHTML = `Mesmo que o fornecedor te entregue este produto <strong>DE GRAÇA (custo zero)</strong>, as taxas do marketplace (${money(channelFees)}) somadas aos impostos de DAS (${money(compPrice * tax)}) e embalagem inviabilizam a margem de ${pct(targetMargin * 100)}. Não concorra com esse preço!`;
+      }
+    }
+  }
+
   // Inicialização
   function init() {
     loadState();
@@ -1028,6 +1216,15 @@ Ficou com alguma dúvida ou deseja que eu já separe o seu pedido? 😊`;
       }
     });
 
+    // Eventos da Engenharia Reversa (Aba 6)
+    ['revCompPrice', 'revTargetMargin', 'revTax', 'revPackaging'].forEach(id => {
+      document.getElementById(id)?.addEventListener('input', renderReverseEngineering);
+    });
+    document.getElementById('revChannelSelect')?.addEventListener('change', renderReverseEngineering);
+
+    // Evento do Simulador de Cupom / Promoção
+    document.getElementById('promoDiscountInput')?.addEventListener('input', renderCalculation);
+
     // Renderização Inicial
     renderCalculation();
     renderProductsList();
@@ -1035,6 +1232,7 @@ Ficou com alguma dúvida ou deseja que eu já separe o seu pedido? 😊`;
     renderCombos();
     renderGoals();
     renderWhatsAppPreview();
+    renderReverseEngineering();
   }
 
   // Inicializar após DOM carregado
