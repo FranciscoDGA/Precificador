@@ -528,13 +528,13 @@
     reader.readAsText(file);
   }
 
-  // Sistema de Licenciamento Hotmart
+  // Sistema de Licenciamento (Kiwify & Hotmart)
   function activateLicense(key) {
     const cleanKey = key.trim().toUpperCase();
     if (!cleanKey) return false;
 
-    // Regra de validação flexível: Código Hotmart (ex: HP...) ou Chave PRO
-    if (cleanKey.startsWith('HP') || cleanKey.startsWith('PRO-') || cleanKey.length >= 8) {
+    // Validação flexível: Código Kiwify (KW...), Hotmart (HP...), PRO-, e-mail ou código de 6+ caracteres
+    if (cleanKey.startsWith('KW') || cleanKey.startsWith('KIWIFY') || cleanKey.startsWith('HP') || cleanKey.startsWith('PRO-') || cleanKey.includes('@') || cleanKey.length >= 6) {
       state.isPro = true;
       state.licenseKey = cleanKey;
       localStorage.setItem(LICENSE_KEY, cleanKey);
@@ -920,7 +920,7 @@ Ficou com alguma dúvida ou deseja que eu já separe o seu pedido? 😊`;
         alert('Parabéns! Sua licença Pro foi ativada com sucesso neste dispositivo.');
         hideProModal();
       } else {
-        alert('Código de transação ou chave de licença inválida. Verifique o código enviado no seu e-mail pela Hotmart.');
+        alert('Código de transação ou chave inválida. Verifique o código enviado no seu e-mail de compra pela Kiwify.');
       }
     });
 
