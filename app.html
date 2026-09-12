@@ -69,6 +69,11 @@
           PDF
         </button>
 
+        <a href="planilha-estoque-curva-abc.html" target="_blank" class="btn btn-secondary btn-sm" title="Baixar Planilha de Controle de Estoque & Curva ABC (.XLSX)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+          Planilha Estoque
+        </a>
+
         <button id="btnOpenProModal" class="btn btn-primary btn-sm">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
           Ativar Pro
@@ -696,6 +701,42 @@
         <a href="https://pay.kiwify.com.br/byhvmBX" target="_blank" class="btn btn-secondary" style="width:100%; text-align:center;">
           Ainda não comprou? Adquira na Kiwify
         </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Boas-Vindas Pós-Compra Kiwify -->
+  <div class="modal-backdrop" id="welcomeModal">
+    <div class="modal-box" style="max-width: 480px; text-align: center;">
+      <div style="font-size: 3rem; margin-bottom: 8px;">🎉</div>
+      <span class="badge badge-pro" style="font-size: 0.85rem; padding: 4px 12px; margin-bottom: 12px; display: inline-block;">Pagamento Aprovado com Sucesso!</span>
+      <h3 style="font-size: 1.35rem; margin-bottom: 10px; color: #fff;">Bem-vindo ao Precificador Pro!</h3>
+      <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 20px; text-align: left;">
+        O seu acesso já está liberado neste dispositivo. Siga estes passos rápidos para aproveitar 100% da ferramenta:
+      </p>
+      
+      <div style="text-align: left; background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px; margin-bottom: 20px; display: flex; flex-direction: column; gap: 12px;">
+        <div style="display: flex; gap: 12px; align-items: flex-start;">
+          <div style="background: #2563eb; color: #fff; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; flex-shrink: 0;">1</div>
+          <span style="font-size: 0.86rem; color: #e2e8f0; line-height: 1.4;">Clique no botão abaixo para <strong>Ativar sua Licença Pro</strong> usando o código da Kiwify ou o seu e-mail de compra.</span>
+        </div>
+        <div style="display: flex; gap: 12px; align-items: flex-start;">
+          <div style="background: #10b981; color: #fff; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; flex-shrink: 0;">2</div>
+          <span style="font-size: 0.86rem; color: #e2e8f0; line-height: 1.4;">Instale o app no celular tocando em <em>"Adicionar à Tela Inicial"</em> no menu do navegador para usar 100% offline.</span>
+        </div>
+        <div style="display: flex; gap: 12px; align-items: flex-start;">
+          <div style="background: #8b5cf6; color: #fff; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; flex-shrink: 0;">3</div>
+          <span style="font-size: 0.86rem; color: #e2e8f0; line-height: 1.4;">Baixe a sua <strong>Planilha de Estoque & Curva ABC</strong> no botão do topo do app.</span>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <button id="btnStartActivation" class="btn btn-primary btn-lg" style="width: 100%;">
+          🔑 Inserir Código e Ativar Licença Pro
+        </button>
+        <button id="btnCloseWelcomeModal" class="btn btn-secondary" style="width: 100%;">
+          Começar a Usar o Aplicativo
+        </button>
       </div>
     </div>
   </div>

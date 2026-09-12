@@ -88,6 +88,62 @@
     }
   }
 
+  // Produtos de Demonstração (Evita a tela vazia na primeira visita)
+  const DEMO_ITEMS = [
+    {
+      id: 'demo-1',
+      date: new Date().toISOString(),
+      product: 'Fone Bluetooth TWS Pro (Exemplo)',
+      sku: 'FONE-BT-PRO',
+      channel: 'Mercado Livre',
+      baseCost: 34.50,
+      cost: 30.00,
+      packaging: 2.50,
+      freight: 0.00,
+      other: 0.00,
+      fixed: 2.00,
+      tax: 0.06,
+      loss: 0.02,
+      ads: 0.00,
+      targetMargin: 0.25,
+      commission: 0.16,
+      fixedFee: 6.00,
+      payment: 0.00,
+      minimumPrice: 53.47,
+      idealPrice: 79.90,
+      profit: 19.98,
+      realMargin: 0.2501,
+      status: 'LUCRO ÓTIMO',
+      statusClass: 'ok'
+    },
+    {
+      id: 'demo-2',
+      date: new Date().toISOString(),
+      product: 'Garrafa Térmica Inox 500ml (Exemplo)',
+      sku: 'GARRAFA-500',
+      channel: 'Shopee',
+      baseCost: 20.30,
+      cost: 17.50,
+      packaging: 1.80,
+      freight: 0.00,
+      other: 0.00,
+      fixed: 1.00,
+      tax: 0.06,
+      loss: 0.02,
+      ads: 0.00,
+      targetMargin: 0.25,
+      commission: 0.14,
+      fixedFee: 4.00,
+      payment: 0.00,
+      minimumPrice: 31.97,
+      idealPrice: 47.90,
+      profit: 12.02,
+      realMargin: 0.2509,
+      status: 'LUCRO ÓTIMO',
+      statusClass: 'ok'
+    }
+  ];
+
   function loadState() {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
@@ -96,6 +152,13 @@
         if (parsed.channels) state.channels = { ...DEFAULT_CHANNELS, ...parsed.channels };
         if (parsed.items && Array.isArray(parsed.items)) state.items = parsed.items;
       }
+      
+      // Se for a primeira vez e o catálogo estiver vazio, pré-carrega os produtos de demonstração
+      if (!state.items || state.items.length === 0) {
+        state.items = JSON.parse(JSON.stringify(DEMO_ITEMS));
+        saveState();
+      }
+
       // Verificar Licença PRO
       const savedLicense = localStorage.getItem(LICENSE_KEY);
       if (savedLicense) {
@@ -105,7 +168,7 @@
     } catch (e) {
       console.error('Erro ao carregar dados locais:', e);
       state.channels = JSON.parse(JSON.stringify(DEFAULT_CHANNELS));
-      state.items = [];
+      state.items = JSON.parse(JSON.stringify(DEMO_ITEMS));
     }
   }
 
@@ -564,6 +627,21 @@
     if (modal) modal.classList.add('active');
   }
 
+  function hideProModal() {
+    const modal = document.getElementById('proModal');
+    if (modal) modal.classList.remove('active');
+  }
+
+  function showWelcomeModal() {
+    const modal = document.getElementById('welcomeModal');
+    if (modal) modal.classList.add('active');
+  }
+
+  function hideWelcomeModal() {
+    const modal = document.getElementById('welcomeModal');
+    if (modal) modal.classList.remove('active');
+  }
+
   // ==========================================
   // NOVOS MÓDULOS EXPANDIDOS (v3.5)
   // ==========================================
@@ -911,7 +989,7 @@ Ficou com alguma dúvida ou deseja que eu já separe o seu pedido? 😊`;
       });
     }
 
-    // Modal Pro e Ativação Hotmart
+    // Modal Pro e Ativação Kiwify
     document.getElementById('btnOpenProModal')?.addEventListener('click', () => showProModal());
     document.getElementById('btnCloseProModal')?.addEventListener('click', hideProModal);
     document.getElementById('btnSubmitLicense')?.addEventListener('click', () => {
@@ -923,6 +1001,23 @@ Ficou com alguma dúvida ou deseja que eu já separe o seu pedido? 😊`;
         alert('Código de transação ou chave inválida. Verifique o código enviado no seu e-mail de compra pela Kiwify.');
       }
     });
+
+    // Modal de Boas-Vindas Pós-Compra Kiwify
+    const urlParams = new URLSearchParams(window.location.search);
+    const hasOrderParam = urlParams.has('order_id') || urlParams.has('kiwify') || urlParams.has('from') || urlParams.has('status');
+    const isFirstVisitAfterPay = hasOrderParam || urlParams.get('welcome') === '1';
+
+    if (isFirstVisitAfterPay) {
+      showWelcomeModal();
+    }
+
+    document.getElementById('btnStartActivation')?.addEventListener('click', () => {
+      hideWelcomeModal();
+      showProModal('Cole seu código de transação ou o seu e-mail de compra da Kiwify abaixo para liberar o Pro.');
+      setTimeout(() => document.getElementById('licenseKeyInput')?.focus(), 200);
+    });
+
+    document.getElementById('btnCloseWelcomeModal')?.addEventListener('click', hideWelcomeModal);
 
     // Limpar tudo
     document.getElementById('btnClearAllItems')?.addEventListener('click', () => {

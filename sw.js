@@ -3,13 +3,15 @@
  * Garante funcionamento Offline com suporte a Clean URLs da Vercel e navegação fluida
  */
 
-const CACHE_NAME = 'precificador-pro-v4.2';
+const CACHE_NAME = 'precificador-pro-v4.3';
 
 const STATIC_ASSETS = [
   '/',
   '/index.html',
   '/app',
   '/app.html',
+  '/planilha-estoque-curva-abc',
+  '/planilha-estoque-curva-abc.html',
   '/precificador-mercadolivre',
   '/precificador-mercadolivre.html',
   '/precificador-amazon',
@@ -32,6 +34,7 @@ const STATIC_ASSETS = [
   '/assets/css/app.css',
   '/assets/js/landing.js',
   '/assets/js/app.js',
+  '/assets/og-preview.png',
   '/assets/icons/icon-192.png',
   '/assets/icons/icon-512.png',
   '/assets/icons/icon.svg',
