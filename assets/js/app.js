@@ -1180,6 +1180,16 @@ Ficou com alguma dúvida ou deseja que eu já separe o seu pedido? 😊`;
     // Modal Pro e Ativação Kiwify
     document.getElementById('btnOpenProModal')?.addEventListener('click', () => showProModal());
     document.getElementById('btnCloseProModal')?.addEventListener('click', hideProModal);
+
+    // Botão de Bônus: Planilha de Estoque & Curva ABC (Exclusivo Vitalício Pro)
+    document.getElementById('btnSpreadsheetBonus')?.addEventListener('click', () => {
+      if (state.isPro) {
+        window.open('planilha-estoque-curva-abc.html', '_blank');
+      } else {
+        showProModal('🔒 BÔNUS EXCLUSIVO DA LICENÇA VITALÍCIA (R$ 147,00):\nA Planilha Mestra de Estoque & Curva ABC (.XLSX) é liberada exclusivamente para clientes da Licença Vitalícia Pro.\n\nCole seu código de compra da Kiwify abaixo ou adquira seu plano para liberar o download imediato.');
+      }
+    });
+
     document.getElementById('btnSubmitLicense')?.addEventListener('click', () => {
       const input = document.getElementById('licenseKeyInput');
       if (input && activateLicense(input.value)) {

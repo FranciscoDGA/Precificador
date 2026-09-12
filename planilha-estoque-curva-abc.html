@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Planilha de Controle de Estoque & Curva ABC | Precificador Pro</title>
-  <meta name="description" content="Planilha oficial para controle de estoque diário, alerta de reposição e matriz Curva ABC 80/20 para vendedores de marketplaces.">
+  <meta name="description" content="Planilha oficial para controle de estoque diário, alerta de reposição e matriz Curva ABC 80/20 para vendedores de marketplaces. Bônus exclusivo da Licença Vitalícia Pro.">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -37,13 +37,13 @@
     </div>
   </nav>
 
-  <!-- Hero de Entrega / Download -->
+  <!-- Hero de Entrega / Download Protegido -->
   <main style="padding: 60px 0 90px;">
     <div class="container" style="max-width: 920px;">
       
-      <div style="text-align:center; margin-bottom: 40px;">
-        <span class="badge" style="background:rgba(16,185,129,0.1); color:#34d399; border:1px solid rgba(16,185,129,0.3); margin-bottom:16px; padding:6px 14px; font-size:0.85rem;">
-          📦 Material Oficial de Gestão de Estoque
+      <div style="text-align:center; margin-bottom: 36px;">
+        <span class="badge" style="background:rgba(16,185,129,0.1); color:#34d399; border:1px solid rgba(16,185,129,0.3); margin-bottom:16px; padding:6px 14px; font-size:0.85rem; display:inline-flex; align-items:center; gap:6px;">
+          🎁 Bônus Exclusivo da Licença Vitalícia Pro
         </span>
         <h1 style="font-size: clamp(2rem, 4vw, 2.8rem); line-height:1.2; margin-bottom:16px; color:#fff;">
           Planilha Mestra de Controle de Estoque & Curva ABC
@@ -52,14 +52,13 @@
           Controle produtos, identifique rupturas com alertas visuais automáticos e descubra quais SKUs geram 80% do seu lucro com a regra de Pareto para Mercado Livre, Shopee, Amazon e Shein.
         </p>
 
-        <!-- Botao de Download Principal -->
-        <a href="Planilha-Controle-de-Estoque-Curva-ABC-Marketplaces.xlsx" download class="btn btn-primary btn-lg" style="background: linear-gradient(135deg, #10b981, #059669); font-size:1.1rem; padding:18px 32px; display:inline-flex; align-items:center; gap:12px; box-shadow:0 12px 28px rgba(16,185,129,0.35); text-decoration:none;">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
-          Baixar Planilha Excel Oficial (.XLSX)
-        </a>
-        <div style="margin-top: 12px; color: var(--text-subtle); font-size: 0.85rem;">
-          Compatível com Microsoft Excel, Google Planilhas (Google Sheets) e LibreOffice.
+        <!-- Container com Trava de Licença Pro e Download Oficial -->
+        <div id="bonusAccessContainer">
+          <div style="padding: 20px; color: var(--text-muted); font-size: 0.9rem;">
+            Verificando status de acesso...
+          </div>
         </div>
+
       </div>
 
       <!-- O que esta incluido na Planilha -->
@@ -131,9 +130,137 @@
 
   <footer class="landing-footer">
     <div class="container" style="text-align: center; color: var(--text-muted); font-size: 0.85rem;">
-      &copy; 2026 Precificador Pro. Todos os direitos reservados.
+      &copy; 2026 Precificador Pro. Todos os direitos reservados. Entrega e processamento protegidos via Kiwify.
     </div>
   </footer>
+
+  <!-- Sistema de Proteção e Download Condicional por Licença Pro -->
+  <script>
+    (function() {
+      'use strict';
+
+      const LICENSE_KEY = 'precificador_pro_license';
+      const DOWNLOAD_FILE = 'Planilha-Controle-de-Estoque-Curva-ABC-Marketplaces.xlsx';
+
+      function isValidLicense(key) {
+        if (!key) return false;
+        const clean = key.trim().toUpperCase();
+        return clean.startsWith('KW') || 
+               clean.startsWith('KIWIFY') || 
+               clean.startsWith('HP') || 
+               clean.startsWith('PRO-') || 
+               clean.includes('@') || 
+               clean.length >= 6;
+      }
+
+      // Detecta parâmetros de URL (caso a Kiwify envie o comprador diretamente)
+      const params = new URLSearchParams(window.location.search);
+      const urlCode = params.get('key') || params.get('code') || params.get('order_id') || params.get('email');
+      if (urlCode && isValidLicense(urlCode)) {
+        localStorage.setItem(LICENSE_KEY, urlCode.trim().toUpperCase());
+      }
+
+      function checkLicense() {
+        const saved = localStorage.getItem(LICENSE_KEY);
+        return isValidLicense(saved) ? saved : null;
+      }
+
+      function renderAccessView() {
+        const container = document.getElementById('bonusAccessContainer');
+        if (!container) return;
+
+        const activeKey = checkLicense();
+
+        if (activeKey) {
+          // USUÁRIO COM LICENÇA VITALÍCIA / PRO ATIVA: Download Liberado
+          container.innerHTML = `
+            <div style="background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.35); border-radius: 14px; padding: 26px; max-width: 650px; margin: 0 auto 20px;">
+              <div style="display:flex; align-items:center; justify-content:center; gap:8px; color:#34d399; font-weight:700; font-size:0.95rem; margin-bottom:16px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Licença Pro Vitalícia Verificada • Download 100% Liberado</span>
+              </div>
+              <button id="btnDownloadSpreadsheet" class="btn btn-primary btn-lg" style="background: linear-gradient(135deg, #10b981, #059669); font-size:1.15rem; padding:18px 36px; display:inline-flex; align-items:center; gap:12px; box-shadow:0 12px 28px rgba(16,185,129,0.35); cursor:pointer; border:none; color:#fff; font-weight:700; border-radius:8px;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                Baixar Planilha Excel Oficial (.XLSX)
+              </button>
+              <div style="margin-top: 14px; color: var(--text-subtle); font-size: 0.85rem;">
+                Compatível com Microsoft Excel, Google Sheets e LibreOffice • Versão Definitiva 2026
+              </div>
+            </div>
+          `;
+
+          document.getElementById('btnDownloadSpreadsheet')?.addEventListener('click', () => {
+            const link = document.createElement('a');
+            link.href = DOWNLOAD_FILE;
+            link.download = DOWNLOAD_FILE;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          });
+
+        } else {
+          // USUÁRIO SEM LICENÇA: Conteúdo Bloqueado e Direcionamento para Kiwify
+          container.innerHTML = `
+            <div style="background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.25); border-radius: 14px; padding: 28px 24px; max-width: 680px; margin: 0 auto 24px; text-align:center;">
+              <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(239,68,68,0.15); color:#fca5a5; padding:6px 14px; border-radius:20px; font-weight:700; font-size:0.82rem; margin-bottom:16px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                MATERIAL RESTRITO • BÔNUS EXCLUSIVO DO PLANO VITALÍCIO (R$ 147,00)
+              </div>
+              
+              <p style="color:#e2e8f0; font-size:0.95rem; line-height:1.6; margin-bottom:20px;">
+                Esta planilha mestra com matriz Curva ABC 80/20 e alertas automáticos de reposição <strong>(avaliada em R$ 97,00)</strong> é entregue <strong>100% grátis</strong> apenas como bônus exclusivo para quem adquire a <strong>Licença Vitalícia Pro</strong> do Precificador Pro.
+              </p>
+
+              <div style="display:flex; flex-direction:column; gap:12px; align-items:center; margin-bottom:24px;">
+                <a href="https://pay.kiwify.com.br/n6bqgG6" target="_blank" class="btn btn-primary btn-lg" style="background: linear-gradient(135deg, #10b981, #059669); font-size:1.05rem; padding:16px 28px; width:100%; max-width:440px; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:10px; box-shadow:0 8px 20px rgba(16,185,129,0.3);">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  Adquirir Licença Vitalícia (R$ 147) & Liberar Bônus
+                </a>
+                <small style="color:var(--text-subtle); font-size:0.82rem;">Pagamento único via Kiwify • Liberação imediata</small>
+              </div>
+
+              <div style="border-top:1px solid rgba(255,255,255,0.08); padding-top:20px; text-align:left;">
+                <label style="display:block; font-size:0.86rem; color:#94a3b8; font-weight:600; margin-bottom:8px;">
+                  Já comprou na Kiwify? Ative seu código para desbloquear o download:
+                </label>
+                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                  <input type="text" id="unlockCodeInput" placeholder="Código de transação Kiwify ou e-mail..." style="flex:1; min-width:240px; padding:12px 14px; background:var(--bg-input); border:1px solid var(--border); border-radius:var(--radius-md); color:#fff; font-family:monospace; font-size:0.92rem; text-transform:uppercase;">
+                  <button id="btnUnlockDownload" class="btn btn-secondary" style="padding:12px 20px; font-weight:600; white-space:nowrap;">
+                    Desbloquear Download
+                  </button>
+                </div>
+                <div id="unlockErrorMsg" style="color:#ef4444; font-size:0.82rem; margin-top:8px; display:none;"></div>
+              </div>
+            </div>
+          `;
+
+          const unlockInput = document.getElementById('unlockCodeInput');
+          const unlockBtn = document.getElementById('btnUnlockDownload');
+          const errorMsg = document.getElementById('unlockErrorMsg');
+
+          unlockBtn?.addEventListener('click', () => {
+            const val = unlockInput ? unlockInput.value.trim().toUpperCase() : '';
+            if (isValidLicense(val)) {
+              localStorage.setItem(LICENSE_KEY, val);
+              alert('Parabéns! Sua licença foi confirmada com sucesso. O download da Planilha Mestra foi liberado.');
+              renderAccessView();
+            } else {
+              if (errorMsg) {
+                errorMsg.textContent = 'Código ou e-mail não identificado. Verifique o código recebido no e-mail de compra da Kiwify ou adquira o Plano Vitalício.';
+                errorMsg.style.display = 'block';
+              }
+            }
+          });
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', renderAccessView);
+      } else {
+        renderAccessView();
+      }
+    })();
+  </script>
 
 </body>
 </html>
