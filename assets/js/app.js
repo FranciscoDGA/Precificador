@@ -9,15 +9,57 @@
   const STORAGE_KEY = 'precificador_pro_db_v2';
   const LICENSE_KEY = 'precificador_pro_license';
 
-  // Canais padrões com taxas de mercado atualizadas
+  // Canais padrões com taxas de mercado atualizadas e documentação oficial
   const DEFAULT_CHANNELS = {
-    'Mercado Livre': { commission: 16.0, fixedFee: 6.0, payment: 0.0, note: 'Varia por categoria e reputação. Frete grátis em itens acima de R$ 79.' },
-    'Amazon': { commission: 15.0, fixedFee: 2.0, payment: 0.0, note: 'Varia de 8% a 15% conforme categoria. Plano individual ou profissional.' },
-    'Shopee': { commission: 14.0, fixedFee: 4.0, payment: 0.0, note: 'Taxa padrão 14% + 6% no programa de frete grátis (máx R$ 100 comissão).' },
-    'Shein': { commission: 16.0, fixedFee: 0.0, payment: 0.0, note: 'Comissão sobre o valor total do pedido com frete incluído.' },
-    'TikTok Shop': { commission: 10.0, fixedFee: 2.0, payment: 0.0, note: 'Canal em expansão no Brasil, taxas promocionais por categoria.' },
-    'Magalu': { commission: 16.0, fixedFee: 3.0, payment: 0.0, note: 'Varia conforme categoria e antecipação de repasse.' },
-    'Loja Própria / WhatsApp': { commission: 0.0, fixedFee: 0.0, payment: 3.99, note: 'Venda direta. Considere apenas a taxa do gateway de pagamento ou cartão.' }
+    'Mercado Livre': { 
+      commission: 16.0, 
+      fixedFee: 6.0, 
+      payment: 0.0, 
+      note: 'Varia por categoria (11% a 19%) e reputação. Frete grátis obrigatório em produtos acima de R$ 79,00.',
+      docUrl: 'https://www.mercadolivre.com.br/ajuda/quanto-custa-vender-um-produto_1338'
+    },
+    'Amazon': { 
+      commission: 15.0, 
+      fixedFee: 2.0, 
+      payment: 0.0, 
+      note: 'Varia de 8% a 15% conforme categoria na Amazon Brasil (consulte tabela oficial).',
+      docUrl: 'https://sell.amazon.com.br/precos'
+    },
+    'Shopee': { 
+      commission: 14.0, 
+      fixedFee: 4.0, 
+      payment: 0.0, 
+      note: 'Padrão 14% + 6% no programa de frete grátis (limite máximo de R$ 100 de comissão por item).',
+      docUrl: 'https://seller.shopee.com.br/edu/article/19515'
+    },
+    'Shein': { 
+      commission: 16.0, 
+      fixedFee: 0.0, 
+      payment: 0.0, 
+      note: 'Comissão sobre o valor total do pedido com frete incluído conforme contrato de seller.',
+      docUrl: 'https://seller.shein.com.br/'
+    },
+    'TikTok Shop': { 
+      commission: 10.0, 
+      fixedFee: 2.0, 
+      payment: 0.0, 
+      note: 'Canal em expansão no Brasil com condições e tarifas promocionais para novos sellers.',
+      docUrl: 'https://seller-br.tiktok.com/'
+    },
+    'Magalu': { 
+      commission: 16.0, 
+      fixedFee: 3.0, 
+      payment: 0.0, 
+      note: 'Varia de 12% a 18% conforme categoria e se opta por antecipação automática.',
+      docUrl: 'https://portaldolu.magalu.com/'
+    },
+    'Loja Própria / WhatsApp': { 
+      commission: 0.0, 
+      fixedFee: 0.0, 
+      payment: 3.99, 
+      note: 'Venda direta sem intermediários. Considere apenas a taxa do gateway de pagamento ou máquina.',
+      docUrl: 'https://www.mercadopago.com.br/ajuda/custos-receber-pagamentos_2977'
+    }
   };
 
   // Estado da aplicação
@@ -99,23 +141,42 @@
     const select = document.getElementById('channelSelect');
     if (!select) return;
     const channelName = select.value;
-    const c = state.channels[channelName] || { commission: 0, fixedFee: 0, payment: 0, note: '' };
+    const c = state.channels[channelName] || DEFAULT_CHANNELS[channelName] || { commission: 0, fixedFee: 0, payment: 0, note: '', docUrl: '#' };
 
-    const commElem = document.getElementById('readoutCommission');
-    const feeElem = document.getElementById('readoutFixedFee');
-    const payElem = document.getElementById('readoutPayment');
+    const commInput = document.getElementById('channelCommissionInput');
+    const feeInput = document.getElementById('channelFixedFeeInput');
+    const payInput = document.getElementById('channelPaymentInput');
     const noteElem = document.getElementById('channelNoteText');
+    const docLink = document.getElementById('channelDocLink');
 
-    if (commElem) commElem.textContent = pct(c.commission);
-    if (feeElem) feeElem.textContent = money(c.fixedFee);
-    if (payElem) payElem.textContent = pct(c.payment);
-    if (noteElem) noteElem.textContent = c.note || 'Taxa padrão configurada.';
+    if (commInput) commInput.value = (Number(c.commission) || 0).toFixed(2);
+    if (feeInput) feeInput.value = (Number(c.fixedFee) || 0).toFixed(2);
+    if (payInput) payInput.value = (Number(c.payment) || 0).toFixed(2);
+    if (noteElem) noteElem.textContent = c.note || 'Ajuste as taxas conforme a categoria exata do seu produto.';
+    
+    if (docLink) {
+      docLink.href = c.docUrl || DEFAULT_CHANNELS[channelName]?.docUrl || '#';
+      docLink.title = `Abrir tabela oficial de tarifas de ${channelName}`;
+    }
   }
 
   // Coleta dados do formulário
   function getFormData() {
     const channelName = document.getElementById('channelSelect')?.value || 'Mercado Livre';
-    const c = state.channels[channelName] || { commission: 0, fixedFee: 0, payment: 0 };
+    const c = state.channels[channelName] || DEFAULT_CHANNELS[channelName] || { commission: 0, fixedFee: 0, payment: 0 };
+
+    // Permite que o valor venha diretamente dos inputs editáveis se existirem
+    const commissionVal = document.getElementById('channelCommissionInput') 
+      ? getNum('channelCommissionInput') 
+      : (c.commission || 0);
+
+    const fixedFeeVal = document.getElementById('channelFixedFeeInput') 
+      ? getNum('channelFixedFeeInput') 
+      : (c.fixedFee || 0);
+
+    const paymentVal = document.getElementById('channelPaymentInput') 
+      ? getNum('channelPaymentInput') 
+      : (c.payment || 0);
 
     return {
       product: document.getElementById('productName')?.value.trim() || '',
@@ -130,9 +191,9 @@
       loss: getNum('productLoss') / 100,
       ads: getNum('productAds') / 100,
       targetMargin: getNum('targetMargin') / 100,
-      commission: (c.commission || 0) / 100,
-      fixedFee: c.fixedFee || 0,
-      payment: (c.payment || 0) / 100
+      commission: commissionVal / 100,
+      fixedFee: fixedFeeVal,
+      payment: paymentVal / 100
     };
   }
 
@@ -365,6 +426,12 @@
                    style="width: 90px; text-align: right; padding: 6px 8px;">
           </td>
           <td><small style="color: var(--text-muted);">${escapeHtml(c.note || '')}</small></td>
+          <td style="text-align: center;">
+            <a href="${escapeHtml(c.docUrl || DEFAULT_CHANNELS[name]?.docUrl || '#')}" target="_blank" rel="noopener noreferrer" 
+               class="btn btn-secondary btn-sm" style="font-size:0.75rem; padding:4px 10px; display:inline-flex; align-items:center; gap:4px; text-decoration:none; white-space:nowrap;">
+              Ver Tarifas ↗
+            </a>
+          </td>
         </tr>
       `;
     }).join('');
@@ -769,6 +836,46 @@ Ficou com alguma dúvida ou deseja que eu já separe o seu pedido? 😊`;
       channelSel.addEventListener('change', () => {
         updateChannelReadout();
         renderCalculation();
+        const activeTab = document.querySelector('.tab-btn.active')?.getAttribute('data-tab');
+        if (activeTab === 'tab-comparador') renderMultiChannelComparison();
+      });
+    }
+
+    // Eventos dos inputs editáveis de taxas do canal
+    const channelFeeInputs = ['channelCommissionInput', 'channelFixedFeeInput', 'channelPaymentInput'];
+    channelFeeInputs.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('input', () => {
+          const currentChannel = document.getElementById('channelSelect')?.value;
+          if (currentChannel && state.channels[currentChannel]) {
+            state.channels[currentChannel].commission = getNum('channelCommissionInput');
+            state.channels[currentChannel].fixedFee = getNum('channelFixedFeeInput');
+            state.channels[currentChannel].payment = getNum('channelPaymentInput');
+            saveState();
+          }
+          renderCalculation();
+          const activeTab = document.querySelector('.tab-btn.active')?.getAttribute('data-tab');
+          if (activeTab === 'tab-comparador') renderMultiChannelComparison();
+          if (activeTab === 'tab-kits') renderCombos();
+          if (activeTab === 'tab-cotacao') renderWhatsAppPreview();
+        });
+      }
+    });
+
+    // Botão restaurar taxas sugeridas do canal
+    const btnResetFees = document.getElementById('btnResetChannelFees');
+    if (btnResetFees) {
+      btnResetFees.addEventListener('click', () => {
+        const currentChannel = document.getElementById('channelSelect')?.value;
+        if (currentChannel && DEFAULT_CHANNELS[currentChannel]) {
+          state.channels[currentChannel] = JSON.parse(JSON.stringify(DEFAULT_CHANNELS[currentChannel]));
+          saveState();
+          updateChannelReadout();
+          renderCalculation();
+          const activeTab = document.querySelector('.tab-btn.active')?.getAttribute('data-tab');
+          if (activeTab === 'tab-comparador') renderMultiChannelComparison();
+        }
       });
     }
 

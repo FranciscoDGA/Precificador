@@ -34,7 +34,8 @@ const STATIC_ASSETS = [
   '/assets/js/app.js',
   '/assets/icons/icon-192.png',
   '/assets/icons/icon-512.png',
-  '/assets/icons/icon.svg'
+  '/assets/icons/icon.svg',
+  '/favicon.ico'
 ];
 
 // Instalação: Cacheia os recursos essenciais
