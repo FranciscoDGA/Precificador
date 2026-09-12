@@ -1,0 +1,416 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Manual do Usuário & Guia de Precificação Estratégica | Precificador Pro</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: #1e293b;
+      background: #ffffff;
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .page {
+      padding: 40px 50px;
+      max-width: 820px;
+      margin: 0 auto;
+      background: #fff;
+    }
+
+    .page-break {
+      page-break-before: always;
+      padding-top: 40px;
+    }
+
+    .cover-page {
+      min-height: 960px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 60px 50px;
+      background: linear-gradient(145deg, #0b0f19 0%, #1e293b 100%);
+      color: #ffffff;
+    }
+
+    .cover-badge {
+      display: inline-block;
+      background: rgba(59, 130, 246, 0.2);
+      color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.4);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .cover-title {
+      font-size: 38px;
+      font-weight: 800;
+      line-height: 1.2;
+      margin: 20px 0 14px;
+    }
+
+    .cover-title span {
+      color: #3b82f6;
+    }
+
+    .cover-subtitle {
+      font-size: 16px;
+      color: #94a3b8;
+      max-width: 600px;
+      line-height: 1.5;
+    }
+
+    .cover-meta {
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+      padding-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: #cbd5e1;
+    }
+
+    .alert-box {
+      background: #eff6ff;
+      border-left: 4px solid #3b82f6;
+      padding: 16px 20px;
+      border-radius: 0 8px 8px 0;
+      margin: 20px 0;
+    }
+
+    .alert-box.success {
+      background: #ecfdf5;
+      border-left-color: #10b981;
+    }
+
+    .alert-title {
+      font-weight: 700;
+      font-size: 15px;
+      color: #1e3a8a;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .alert-box.success .alert-title {
+      color: #065f46;
+    }
+
+    h2 {
+      font-size: 22px;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #e2e8f0;
+    }
+
+    h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #1e293b;
+      margin: 20px 0 8px;
+    }
+
+    p {
+      margin-bottom: 12px;
+      color: #334155;
+    }
+
+    ul, ol {
+      margin-left: 24px;
+      margin-bottom: 16px;
+      color: #334155;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    .step-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin-bottom: 16px;
+    }
+
+    .step-header {
+      font-weight: 700;
+      color: #2563eb;
+      font-size: 15px;
+      margin-bottom: 6px;
+    }
+
+    .btn-link {
+      display: inline-block;
+      background: #2563eb;
+      color: #ffffff !important;
+      text-decoration: none;
+      padding: 10px 18px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 14px;
+      margin-top: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0 24px;
+      font-size: 13px;
+    }
+
+    th, td {
+      border: 1px solid #cbd5e1;
+      padding: 10px 12px;
+      text-align: left;
+    }
+
+    th {
+      background: #f1f5f9;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .formula-box {
+      background: #1e293b;
+      color: #f8fafc;
+      padding: 16px;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 14px;
+      text-align: center;
+      margin: 16px 0;
+      border: 1px solid #334155;
+    }
+
+    .footer-note {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid #e2e8f0;
+      font-size: 12px;
+      color: #64748b;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CAPA -->
+  <div class="page">
+    <div class="cover-page">
+      <div>
+        <span class="cover-badge">Documento Oficial de Acesso & Metodologia</span>
+        <h1 class="cover-title">Precificador <span>Pro</span></h1>
+        <p class="cover-subtitle">
+          Manual Completo do Usuário, Instruções de Acesso à Plataforma Externa, Ativação de Licença e Guia Estratégico de Precificação para Marketplaces.
+        </p>
+      </div>
+
+      <div>
+        <div class="alert-box" style="background: rgba(30,41,59,0.7); border-left-color: #38bdf8; color: #e2e8f0; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 30px;">
+          <div class="alert-title" style="color: #38bdf8;">🌐 Ambiente Externo Oficial</div>
+          <p style="color: #cbd5e1; font-size: 13px; margin: 0;">
+            O Precificador Pro é uma aplicação tecnológica web progressiva (PWA). Este documento contém as instruções oficiais para acessar o ambiente externo do software, ativar seu plano Pro com o código da Hotmart e instalar no seu smartphone ou computador.
+          </p>
+        </div>
+
+        <div class="cover-meta">
+          <div><strong>Versão:</strong> 4.2 Pro (Edição 2026)</div>
+          <div><strong>Processamento:</strong> Hotmart B.V.</div>
+          <div><strong>Garantia:</strong> 7 Dias Incondicional</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PÁGINA 1: INSTRUÇÕES DE ACESSO AO SITE EXTERNO -->
+  <div class="page page-break">
+    <h2>1. Acesso à Ferramenta & Plataforma Externa</h2>
+
+    <div class="alert-box success">
+      <div class="alert-title">✅ Informação Transparente ao Usuário</div>
+      <p style="margin:0;">
+        Conforme informado na página de compra e nos termos de adesão, o <strong>Precificador Pro</strong> é uma aplicação de software hospedada em ambiente web externo próprio, rápido e seguro com criptografia HTTPS e banco de dados local-first.
+      </p>
+    </div>
+
+    <h3>Como acessar a ferramenta agora:</h3>
+    <div class="step-card">
+      <div class="step-header">Passo 1: Abrir o link da aplicação no seu navegador</div>
+      <p>Clique no link oficial abaixo ou copie e cole no seu navegador de preferência (Google Chrome, Safari, Edge ou Firefox):</p>
+      <a href="https://precificador-sellers.vercel.app/app.html" target="_blank" class="btn-link">
+        👉 Acessar o Aplicativo Precificador Pro (Clique Aqui)
+      </a>
+      <p style="font-size: 12px; color: #64748b; margin-top: 8px;">
+        URL Direta: <code>https://precificador-sellers.vercel.app/app.html</code>
+      </p>
+    </div>
+
+    <div class="step-card">
+      <div class="step-header">Passo 2: Ativar sua Licença Pro Vitalícia ou Anual</div>
+      <ol>
+        <li>Ao abrir a ferramenta, localize no canto superior direito o botão <strong>"Ativar Pro"</strong>.</li>
+        <li>Abra a caixa de entrada do seu e-mail cadastrado na Hotmart e procure pelo e-mail com o assunto <em>"Compra aprovada: Precificador Pro"</em>.</li>
+        <li>Copie o seu <strong>Código da Transação Hotmart</strong>. Ele começa com as letras <strong>HP</strong> (exemplo: <code>HP1928374650</code>).</li>
+        <li>Cole o seu código no campo indicado e clique em <strong>"Validar e Ativar Licença Pro"</strong>.</li>
+        <li>Pronto! O badge no topo mudará para <strong>PRO ATIVO</strong> e você terá cálculos, simulações e histórico ilimitados liberados no seu dispositivo.</li>
+      </ol>
+    </div>
+
+    <div class="step-card">
+      <div class="step-header">Passo 3: Como Instalar no Celular como Aplicativo (Android e iOS)</div>
+      <ul>
+        <li><strong>No Android (Google Chrome):</strong> Abra o link do app, toque no menu superior (3 pontinhos) e selecione <strong>"Instalar aplicativo"</strong> ou <strong>"Adicionar à tela inicial"</strong>. O ícone oficial será adicionado à lista de aplicativos do seu celular.</li>
+        <li><strong>No iPhone / iPad (Safari):</strong> Abra o link do app no navegador Safari, toque no ícone de compartilhamento (quadradinho com seta para cima) e clique em <strong>"Adicionar à Tela de Início"</strong>.</li>
+        <li><strong>Funcionamento 100% Offline:</strong> Após carregar pela primeira vez, o aplicativo opera normalmente mesmo se você estiver sem conexão de internet.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PÁGINA 2: METODOLOGIA FINANCEIRA E CÁLCULO REAL -->
+  <div class="page page-break">
+    <h2>2. A Metodologia Financeira do Precificador Pro</h2>
+
+    <p>
+      A maioria dos vendedores comete o erro de calcular o preço de venda através do chamado <strong>Markup Simples</strong>. Entenda por que esse método corrói o lucro líquido:
+    </p>
+
+    <h3>O Erro do Markup Ingênuo:</h3>
+    <p>
+      Se um produto custa R$ 30,00 e o vendedor quer "30% de lucro", ele simplesmente multiplica R$ 30 x 1,30 = R$ 39,00. Quando o canal desconta 16% de comissão + R$ 6 de taxa fixa + 6% de imposto DAS, o vendedor recebe apenas R$ 26,44 — <strong>acumulando um prejuízo silencioso de R$ 3,56 por unidade vendida!</strong>
+    </p>
+
+    <h3>A Fórmula de Margem sobre a Receita Bruta (Utilizada no App):</h3>
+    <p>
+      Para garantir que você realmente coloque no bolso a margem planejada, o Precificador Pro utiliza o algoritmo de margem de contribuição inversa sobre a receita líquida:
+    </p>
+
+    <div class="formula-box">
+      Preço Ideal = (Custos Totais em R$) ÷ [ 1 - (Comissão% + Imposto% + Perdas% + Ads% + Margem%) ]
+    </div>
+
+    <h3>Componentes de Custos que você deve preencher:</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Campo no Simulador</th>
+          <th>O que representa</th>
+          <th>Exemplo Prático</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Custo do Produto</strong></td>
+          <td>Valor pago ao fornecedor ou custo de fabricação.</td>
+          <td>R$ 25,00</td>
+        </tr>
+        <tr>
+          <td><strong>Embalagem & Insumos</strong></td>
+          <td>Caixa de papelão, fita adesiva, saco inviolável e etiqueta.</td>
+          <td>R$ 2,50</td>
+        </tr>
+        <tr>
+          <td><strong>Frete Pago pelo Vendedor</strong></td>
+          <td>Custo de frete obrigatório por regras de plataforma ou frete próprio.</td>
+          <td>R$ 0,00 a R$ 26,00</td>
+        </tr>
+        <tr>
+          <td><strong>Custo Fixo Rateado</strong></td>
+          <td>Rateio de custos operacionais dividido pela estimativa mensal de vendas.</td>
+          <td>R$ 2,00 a R$ 5,00</td>
+        </tr>
+        <tr>
+          <td><strong>Imposto sobre a Venda</strong></td>
+          <td>Alíquota do seu enquadramento tributário (ex: DAS no Simples Nacional).</td>
+          <td>4% a 8%</td>
+        </tr>
+        <tr>
+          <td><strong>Perdas & Devoluções</strong></td>
+          <td>Provisão percentual para avarias, extravios ou devoluções de clientes.</td>
+          <td>1,5% a 3%</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PÁGINA 3: CONSULTA DE TAXAS E SUPORTE -->
+  <div class="page page-break">
+    <h2>3. Como Consultar e Atualizar as Taxas dos Canais</h2>
+
+    <p>
+      O Precificador Pro permite que você <strong>personalize 100% das taxas, comissões e fretes</strong> para a categoria específica dos seus produtos. Nenhum valor fica engessado.
+    </p>
+
+    <div class="alert-box">
+      <div class="alert-title">📖 Onde consultar as tarifas oficiais atualizadas:</div>
+      <p>Você pode acessar a documentação oficial de cada canal diretamente pelo botão <strong>"Documentação & Tarifas Oficiais ↗"</strong> dentro do aplicativo.</p>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Canal de Venda</th>
+          <th>Taxas Médias de Referência</th>
+          <th>Regra Importante</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Mercado Livre</strong></td>
+          <td>11% a 19% + R$ 6 abaixo de R$ 79</td>
+          <td>Frete grátis obrigatório para itens a partir de R$ 79,00.</td>
+        </tr>
+        <tr>
+          <td><strong>Amazon Brasil</strong></td>
+          <td>8% a 15% + R$ 2,00 taxa fixa</td>
+          <td>Variação conforme categoria e plano (Individual ou Pro).</td>
+        </tr>
+        <tr>
+          <td><strong>Shopee Brasil</strong></td>
+          <td>14% padrão + 6% Frete Grátis</td>
+          <td>Comissão com teto máximo de R$ 100 por item + R$ 4 fixa.</td>
+        </tr>
+        <tr>
+          <td><strong>Shein Brasil</strong></td>
+          <td>16% padrão sobre o total</td>
+          <td>Comissão cobrada sobre o valor do produto.</td>
+        </tr>
+        <tr>
+          <td><strong>TikTok Shop</strong></td>
+          <td>5% a 10% promocional</td>
+          <td>Tarifas especiais para novos vendedores no Brasil.</td>
+        </tr>
+        <tr>
+          <td><strong>Magalu</strong></td>
+          <td>12% a 18% por categoria</td>
+          <td>Varia conforme prazos de repasse e logística.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>4. Privacidade, Suporte e Garantia</h2>
+    <ul>
+      <li><strong>Privacidade Local:</strong> Nenhuma informação de custo, margem ou produto é enviada para servidores externos. Seus dados são armazenados localmente no seu aparelho.</li>
+      <li><strong>Backup em 1 Clique:</strong> Na aba "Catálogo", utilize o botão "Backup JSON" para salvar cópias dos seus produtos.</li>
+      <li><strong>Garantia de 7 Dias Hotmart:</strong> Sua compra está 100% protegida com garantia incondicional assegurada pela Hotmart.</li>
+    </ul>
+
+    <div class="footer-note">
+      &copy; 2026 Precificador Pro. Todos os direitos reservados. Processamento e entrega protegidos via Hotmart.
+    </div>
+  </div>
+
+</body>
+</html>
